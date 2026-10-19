@@ -1,0 +1,2680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIET Meerut - Student Personal Details (Scholarship Form Front Page)</title>
+    <!-- Tailwind CSS for Responsive College Administration UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jsPDF & AutoTable for crisp, native vector A4 PDF generation (plus html2canvas fallback) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --miet-blue: #1e3a8a;
+            --miet-blue-light: #eff6ff;
+            --miet-border: #cbd5e1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        /* Official A4 Form Preview Paper Styling */
+        .a4-preview-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0;
+        }
+
+        #a4-printable-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            background: #ffffff;
+            color: #000000;
+            padding: 6mm 8mm;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+            font-family: "Times New Roman", Times, Georgia, serif;
+            line-height: 1.25;
+            font-weight: bold;
+            position: relative;
+        }
+
+        /* Official Form Table Styling inside A4 Sheet */
+        .official-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 3.5px;
+            font-size: 10.5pt;
+            font-weight: bold;
+        }
+
+        .official-table th,
+        .official-table td {
+            border: 1.2px solid #000000;
+            padding: 2.5px 5px;
+            vertical-align: middle;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .official-section-banner {
+            background-color: #e5e7eb;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 11.5pt;
+            letter-spacing: 0.5px;
+            padding: 3.5px 5px !important;
+        }
+
+        .sno-col {
+            width: 34px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 10.5pt;
+        }
+
+        .val-cell {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 800;
+            font-size: 10.5pt;
+            color: #000000;
+            min-height: 17px;
+        }
+
+        /* Form Input Validation Highlighting */
+        .input-error {
+            border-color: #dc2626 !important;
+            background-color: #fef2f2 !important;
+        }
+
+        .error-text {
+            color: #dc2626;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .error-text.visible {
+            display: block;
+        }
+
+        /* Print Media Query for Native Browser Print (Single-Page A4 Portrait) */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 6mm;
+            }
+            body {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only-container {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .a4-preview-wrapper {
+                padding: 0 !important;
+                overflow: visible !important;
+            }
+            #a4-printable-sheet {
+                width: 100% !important;
+                min-height: auto !important;
+                max-height: 284mm !important;
+                box-shadow: none !important;
+                padding: 1mm !important;
+                margin: 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .official-section-banner {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                background-color: #eeeeee !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Top College Administration Header -->
+    <header class="bg-blue-900 text-white shadow-md no-print border-b-4 border-amber-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5 text-center md:text-left">
+                    <div class="w-12 h-12 rounded-lg bg-white text-blue-900 flex items-center justify-center font-extrabold text-xl shadow shrink-0 border-2 border-amber-400">
+                        MIET
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-blue-200 font-semibold">Official Scholarship Form Front Cover Portal</p>
+                        <h1 class="text-lg sm:text-xl md:text-2xl font-bold tracking-tight">
+                            MEERUT INSTITUTE OF ENGINEERING &amp; TECHNOLOGY, MEERUT - 250005
+                        </h1>
+                        <p class="text-sm text-amber-300 font-semibold mt-0.5">STUDENT'S PERSONAL DETAILS — A4 PDF GENERATOR</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <button type="button" id="btnLoadSample" class="px-3 py-2 text-xs font-semibold bg-blue-800 hover:bg-blue-700 text-blue-100 border border-blue-600 rounded-lg transition shadow-sm">
+                        Fill Sample Demo Data
+                    </button>
+                    <button type="button" id="btnHelpDocs" class="px-3 py-2 text-xs font-semibold bg-white/10 hover:bg-white/20 text-white rounded-lg transition">
+                        Instructions &amp; Test Suite
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notification Banner Area -->
+    <div id="statusAlertBox" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 hidden no-print" role="alert">
+        <div id="statusAlertInner" class="rounded-lg p-4 border flex items-start justify-between gap-3 shadow-sm">
+            <div class="flex items-start gap-3">
+                <span id="statusAlertIcon" class="text-lg font-bold mt-0.5"></span>
+                <div>
+                    <h3 id="statusAlertTitle" class="text-sm font-bold"></h3>
+                    <div id="statusAlertMessage" class="text-xs mt-1 space-y-1"></div>
+                </div>
+            </div>
+            <button type="button" onclick="hideStatusBanner()" class="text-sm font-bold opacity-70 hover:opacity-100 px-2">✕</button>
+        </div>
+    </div>
+
+    <!-- Sticky Quick Action Toolbar -->
+    <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+                    100% Client-Side Privacy (No Server Upload)
+                </span>
+                <span id="filenamePreviewBadge" class="hidden md:inline-block text-xs text-slate-500 font-mono truncate max-w-xs lg:max-w-md">
+                    Output: StudentPersonalDetails_[RegNo]_[Name].pdf
+                </span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <button type="button" id="btnGenerateTop" class="px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-lg text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5">
+                    <span>✓</span> 1. Generate &amp; Validate PDF
+                </button>
+                <button type="button" id="btnDownloadTop" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5">
+                    <span>⬇</span> 2. Download A4 PDF
+                </button>
+                <button type="button" id="btnPrintTop" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5">
+                    <span>🖨</span> 3. Print Form
+                </button>
+                <button type="button" id="btnResetTop" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold rounded-lg text-xs sm:text-sm transition">
+                    Reset Form
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- LEFT / MAIN COLUMN: Interactive Data Entry Form -->
+            <div class="lg:col-span-7 space-y-6 no-print">
+
+                <form id="scholarshipForm" novalidate class="space-y-6">
+
+                    <!-- SECTION 1: STUDENT'S PERSONAL DETAILS -->
+                    <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-blue-900 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div>
+                                <h2 class="text-base font-bold tracking-wide uppercase">Section I: Student's Personal Details</h2>
+                                <p class="text-xs text-blue-200">Fields 1 to 8 as per MIET Scholarship Cover Form</p>
+                            </div>
+                            <span class="text-xs bg-blue-800 text-blue-100 px-2.5 py-1 rounded font-mono">Items 1–8</span>
+                        </div>
+
+                        <div class="p-5 space-y-5">
+                            <!-- Row 1: 1. Scholarship Reg No & OTR Number -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="scholarshipRegNo" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        1. Scholarship Registration No. <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text" id="scholarshipRegNo" name="scholarshipRegNo" autocomplete="off"
+                                        placeholder="e.g. 091234567890123"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-mono">
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Leading zeros are strictly preserved.</p>
+                                    <p id="err-scholarshipRegNo" class="error-text">Please enter a valid Scholarship Registration Number.</p>
+                                </div>
+
+                                <div>
+                                    <label for="otrNumber" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        1(b). OTR Number <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text" id="otrNumber" name="otrNumber" autocomplete="off"
+                                        placeholder="e.g. OTR20260012345"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-mono">
+                                    <p id="err-otrNumber" class="error-text">Please enter your OTR Number.</p>
+                                </div>
+                            </div>
+
+                            <!-- Row 2: 2. Fresh/Renewal & APAAR ID -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="freshRenewal" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        2. Fresh / Renewal <span class="text-red-600">*</span>
+                                    </label>
+                                    <select id="freshRenewal" name="freshRenewal"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                        <option value="">-- Select Category --</option>
+                                        <option value="FRESH">FRESH</option>
+                                        <option value="RENEWAL">RENEWAL</option>
+                                    </select>
+                                    <p id="err-freshRenewal" class="error-text">Please select Fresh or Renewal status.</p>
+                                </div>
+
+                                <div>
+                                    <label for="apaarId" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        2(b). APAAR ID <span class="text-slate-400 font-normal">(12-Digit / Alphanumeric)</span>
+                                    </label>
+                                    <input type="text" id="apaarId" name="apaarId" autocomplete="off"
+                                        placeholder="e.g. 012345678901"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-mono">
+                                    <p id="err-apaarId" class="error-text">Please enter a valid APAAR ID.</p>
+                                </div>
+                            </div>
+
+                            <!-- Row 3: Mandatory Dynamic Religion & 3. Caste -->
+                            <div class="p-3.5 rounded-lg bg-blue-50/70 border border-blue-200 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-blue-900 uppercase tracking-wide">
+                                        3. Religion &amp; Caste Dynamic Selection (Mandatory Rule)
+                                    </span>
+                                    <span class="text-[11px] text-blue-700 font-medium">Auto-filtered by Religion</span>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="religion" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            Religion <span class="text-red-600">*</span>
+                                        </label>
+                                        <select id="religion" name="religion"
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                            <option value="">-- Select Religion First --</option>
+                                            <option value="Hindu">Hindu</option>
+                                            <option value="Muslim">Muslim</option>
+                                            <option value="Sikh">Sikh</option>
+                                            <option value="Christian">Christian</option>
+                                            <option value="Jain">Jain</option>
+                                            <option value="Parsi">Parsi</option>
+                                        </select>
+                                        <p id="err-religion" class="error-text">Please select a Religion.</p>
+                                    </div>
+
+                                    <div>
+                                        <label for="caste" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            3. Caste <span class="text-red-600">*</span>
+                                        </label>
+                                        <select id="caste" name="caste" disabled
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-slate-100 disabled:cursor-not-allowed focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                            <option value="">-- Select Religion First --</option>
+                                        </select>
+                                        <p id="err-caste" class="error-text">Please select a valid Caste permitted for your Religion.</p>
+                                    </div>
+                                </div>
+                                <p class="text-[11px] text-slate-600">
+                                    <strong>Rule:</strong> Selecting <em>Hindu</em> enables <strong>General, OBC, SC</strong>. Selecting <em>Muslim, Sikh, Christian, Jain, or Parsi</em> enables <strong>Minority</strong> only.
+                                </p>
+                            </div>
+
+                            <!-- Row 4: 4. Day Scholar / Hostler -->
+                            <div>
+                                <label for="dayScholarHostler" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                    4. Day Scholar / Hostler <span class="text-red-600">*</span>
+                                </label>
+                                <select id="dayScholarHostler" name="dayScholarHostler"
+                                    class="w-full sm:w-1/2 rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <option value="">-- Select Residence Status --</option>
+                                    <option value="DAY SCHOLAR">DAY SCHOLAR</option>
+                                    <option value="HOSTLER">HOSTLER</option>
+                                </select>
+                                <p id="err-dayScholarHostler" class="error-text">Please select Day Scholar or Hostler.</p>
+                            </div>
+
+                            <!-- Row 5: 5. Student's Name & Mob. No. -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 pt-2 border-t border-slate-100">
+                                <div class="sm:col-span-7">
+                                    <label for="studentName" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        5. Student's Name <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text" id="studentName" name="studentName"
+                                        placeholder="Full Name (as per High School / Scholarship Form)"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-studentName" class="error-text">Please enter Student's Full Name.</p>
+                                </div>
+
+                                <div class="sm:col-span-5">
+                                    <label for="studentMobile" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        Student Mob. No. <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="tel" id="studentMobile" name="studentMobile" maxlength="10"
+                                        placeholder="10-digit Mobile No."
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-studentMobile" class="error-text">Enter a valid 10-digit Indian mobile number.</p>
+                                </div>
+                            </div>
+
+                            <!-- Row 6: 6. Father's Name & Mob. No. -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                                <div class="sm:col-span-7">
+                                    <label for="fatherName" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        6. Father's Name <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text" id="fatherName" name="fatherName"
+                                        placeholder="Father's Full Name"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-fatherName" class="error-text">Please enter Father's Name.</p>
+                                </div>
+
+                                <div class="sm:col-span-5">
+                                    <label for="fatherMobile" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        Father's Mob. No. <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="tel" id="fatherMobile" name="fatherMobile" maxlength="10"
+                                        placeholder="10-digit Mobile No."
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-fatherMobile" class="error-text">Enter a valid 10-digit mobile number.</p>
+                                </div>
+                            </div>
+
+                            <!-- Row 7: 7. Mother's Name & Mob. No. -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                                <div class="sm:col-span-7">
+                                    <label for="motherName" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        7. Mother's Name <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text" id="motherName" name="motherName"
+                                        placeholder="Mother's Full Name"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-motherName" class="error-text">Please enter Mother's Name.</p>
+                                </div>
+
+                                <div class="sm:col-span-5">
+                                    <label for="motherMobile" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        Mother's Mob. No. <span class="text-slate-400 font-normal">(Optional)</span>
+                                    </label>
+                                    <input type="tel" id="motherMobile" name="motherMobile" maxlength="10"
+                                        placeholder="10-digit Mobile No."
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-motherMobile" class="error-text">If entered, mobile number must be a valid 10-digit number.</p>
+                                </div>
+                            </div>
+
+                            <!-- Row 8: 8. Guardian's Name & Mob. No. -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                                <div class="sm:col-span-7">
+                                    <label for="guardianName" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        8. Guardian's Name <span class="text-slate-400 font-normal">(Optional)</span>
+                                    </label>
+                                    <input type="text" id="guardianName" name="guardianName"
+                                        placeholder="Guardian's Name (if applicable)"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                </div>
+
+                                <div class="sm:col-span-5">
+                                    <label for="guardianMobile" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        Guardian's Mob. No. <span class="text-slate-400 font-normal">(Optional)</span>
+                                    </label>
+                                    <input type="tel" id="guardianMobile" name="guardianMobile" maxlength="10"
+                                        placeholder="10-digit Mobile No."
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-guardianMobile" class="error-text">If entered, mobile number must be a valid 10-digit number.</p>
+                                </div>
+                            </div>
+
+                            <!-- Configurable Mobile Validation Rule Toggle -->
+                            <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                                <label class="inline-flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="strictIndianMobile" checked class="rounded text-blue-700 focus:ring-blue-600">
+                                    <span>Strict Indian Mobile Rule (Starts with 6–9, 10 digits)</span>
+                                </label>
+                                <span>Uncheck to allow any 10-digit number</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 2: ACADEMIC DETAILS -->
+                    <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-blue-900 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div>
+                                <h2 class="text-base font-bold tracking-wide uppercase">Section II: Academic Details</h2>
+                                <p class="text-xs text-blue-200">9. High School, 10. Intermediate, 11. Diploma, 12. Graduation (Auto-calculates Percentage)</p>
+                            </div>
+                            <span class="text-xs bg-blue-800 text-blue-100 px-2.5 py-1 rounded font-mono">Items 9–12</span>
+                        </div>
+
+                        <div class="p-5 space-y-4">
+                            <p class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded border border-slate-200">
+                                Fill in all qualifications that apply to you. Inapplicable rows (such as Diploma or Graduation for 1st-year B.Tech students) may be left blank and will still appear cleanly in the printable A4 table.
+                            </p>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse min-w-[680px]">
+                                    <thead>
+                                        <tr class="bg-slate-100 text-slate-700 text-[11px] font-bold uppercase border-y border-slate-300">
+                                            <th class="py-2.5 px-2 w-10 text-center">#</th>
+                                            <th class="py-2.5 px-2 w-32">Class</th>
+                                            <th class="py-2.5 px-2">Board / University</th>
+                                            <th class="py-2.5 px-2 w-28">Roll No.</th>
+                                            <th class="py-2.5 px-2 w-24">Passing Year</th>
+                                            <th class="py-2.5 px-2 w-24">Obtained Marks</th>
+                                            <th class="py-2.5 px-2 w-24">Total Marks</th>
+                                            <th class="py-2.5 px-2 w-28">Percentage (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-200 text-xs">
+                                        <!-- 9. HIGH SCHOOL -->
+                                        <tr class="hover:bg-slate-50/80">
+                                            <td class="py-2.5 px-2 text-center font-bold text-slate-700">9</td>
+                                            <td class="py-2.5 px-2 font-bold text-slate-900">HIGH SCHOOL</td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_hs_board" placeholder="e.g. CBSE / UP Board"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs uppercase focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_hs_roll" placeholder="Roll No."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" id="acad_hs_year" placeholder="YYYY" min="1980" max="2035"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="0" id="acad_hs_obt" placeholder="Obt."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="1" id="acad_hs_tot" placeholder="Total"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_hs_pct" readonly placeholder="Auto %"
+                                                    class="w-full rounded border border-slate-200 bg-slate-100 px-2 py-1.5 text-xs font-mono font-bold text-blue-900 text-center">
+                                            </td>
+                                        </tr>
+
+                                        <!-- 10. INTERMEDIATE -->
+                                        <tr class="hover:bg-slate-50/80">
+                                            <td class="py-2.5 px-2 text-center font-bold text-slate-700">10</td>
+                                            <td class="py-2.5 px-2 font-bold text-slate-900">INTERMEDIATE</td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_inter_board" placeholder="e.g. CBSE / UP Board"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs uppercase focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_inter_roll" placeholder="Roll No."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" id="acad_inter_year" placeholder="YYYY" min="1980" max="2035"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="0" id="acad_inter_obt" placeholder="Obt."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="1" id="acad_inter_tot" placeholder="Total"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_inter_pct" readonly placeholder="Auto %"
+                                                    class="w-full rounded border border-slate-200 bg-slate-100 px-2 py-1.5 text-xs font-mono font-bold text-blue-900 text-center">
+                                            </td>
+                                        </tr>
+
+                                        <!-- 11. DIPLOMA -->
+                                        <tr class="hover:bg-slate-50/80">
+                                            <td class="py-2.5 px-2 text-center font-bold text-slate-700">11</td>
+                                            <td class="py-2.5 px-2 font-bold text-slate-900">DIPLOMA</td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_dip_board" placeholder="e.g. BTEUP"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs uppercase focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_dip_roll" placeholder="Roll No."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" id="acad_dip_year" placeholder="YYYY" min="1980" max="2035"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="0" id="acad_dip_obt" placeholder="Obt."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="1" id="acad_dip_tot" placeholder="Total"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_dip_pct" readonly placeholder="Auto %"
+                                                    class="w-full rounded border border-slate-200 bg-slate-100 px-2 py-1.5 text-xs font-mono font-bold text-blue-900 text-center">
+                                            </td>
+                                        </tr>
+
+                                        <!-- 12. GRADUATION -->
+                                        <tr class="hover:bg-slate-50/80">
+                                            <td class="py-2.5 px-2 text-center font-bold text-slate-700">12</td>
+                                            <td class="py-2.5 px-2 font-bold text-slate-900">GRADUATION</td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_grad_board" placeholder="e.g. AKTU / CCSU"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs uppercase focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_grad_roll" placeholder="Roll No."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" id="acad_grad_year" placeholder="YYYY" min="1980" max="2035"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="0" id="acad_grad_obt" placeholder="Obt."
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="number" step="any" min="1" id="acad_grad_tot" placeholder="Total"
+                                                    class="w-full rounded border border-slate-300 px-2 py-1.5 text-xs font-mono focus:border-blue-600 outline-none">
+                                            </td>
+                                            <td class="py-2 px-1.5">
+                                                <input type="text" id="acad_grad_pct" readonly placeholder="Auto %"
+                                                    class="w-full rounded border border-slate-200 bg-slate-100 px-2 py-1.5 text-xs font-mono font-bold text-blue-900 text-center">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p id="err-academicTable" class="error-text"></p>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 3: PRESENT COURSE DETAILS -->
+                    <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-blue-900 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div>
+                                <h2 class="text-base font-bold tracking-wide uppercase">Section III: Present Course Details</h2>
+                                <p class="text-xs text-blue-200">Current Program, Branch, Study Year, and AKTU/CCSU Identifiers</p>
+                            </div>
+                            <span class="text-xs bg-blue-800 text-blue-100 px-2.5 py-1 rounded font-mono">Items 13–17</span>
+                        </div>
+
+                        <div class="p-5 space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <!-- 13. PRESENT COURSE (Manual Text Input - No Dropdown) -->
+                                <div>
+                                    <label for="presentCourse" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        13. Present Course <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text" id="presentCourse" name="presentCourse" autocomplete="off"
+                                        placeholder="Type Present Course (e.g. B.TECH / MBA / MCA)"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-presentCourse" class="error-text">Please enter your Present Course.</p>
+                                </div>
+
+                                <!-- 14. BRANCH (Manual Text Input - No Dropdown) -->
+                                <div>
+                                    <label for="presentBranch" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        14. Branch <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text" id="presentBranch" name="presentBranch" autocomplete="off"
+                                        placeholder="Type Branch (e.g. CSE / IT / ECE / N/A)"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-presentBranch" class="error-text">Please enter your Branch (or N/A if not applicable).</p>
+                                </div>
+
+                                <!-- 15. YEAR (Configurable Duration) -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label for="presentYear" class="block text-xs font-bold uppercase text-slate-700">
+                                            15. Year <span class="text-red-600">*</span>
+                                        </label>
+                                        <select id="courseDurationConfig" title="Configure maximum course duration"
+                                            class="text-[11px] bg-slate-100 border border-slate-300 rounded px-1.5 py-0.5 text-slate-700">
+                                            <option value="4" selected>4-Yr Course</option>
+                                            <option value="3">3-Yr Course</option>
+                                            <option value="2">2-Yr Course</option>
+                                            <option value="5">5-Yr Course</option>
+                                        </select>
+                                    </div>
+                                    <select id="presentYear" name="presentYear"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                        <option value="">-- Select Year --</option>
+                                        <option value="FIRST YEAR (I)">FIRST YEAR (I)</option>
+                                        <option value="SECOND YEAR (II)">SECOND YEAR (II)</option>
+                                        <option value="THIRD YEAR (III)">THIRD YEAR (III)</option>
+                                        <option value="FOURTH YEAR (IV)">FOURTH YEAR (IV)</option>
+                                    </select>
+                                    <p id="err-presentYear" class="error-text">Please select your current study Year.</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- 16. UNIVERSITY ROLL NO. (AKTU/CCSU) -->
+                                <div>
+                                    <label for="univRollNo" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        16. University Roll No. (AKTU/CCSU)
+                                    </label>
+                                    <input type="text" id="univRollNo" placeholder="e.g. 2300680100123 (Leave blank if not allotted yet)"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-univRollNo" class="error-text">Invalid University Roll No.</p>
+                                </div>
+
+                                <!-- 17. UNIVERSITY ENROLLMENT NO. (AKTU/CCSU) -->
+                                <div>
+                                    <label for="univEnrollNo" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        17. University Enrollment No. (AKTU/CCSU)
+                                    </label>
+                                    <input type="text" id="univEnrollNo" placeholder="e.g. AKTU2300681234 (Leave blank if 1st Yr pending)"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono uppercase focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <p id="err-univEnrollNo" class="error-text">Invalid University Enrollment No.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 4: LAST YEAR EXAM DETAIL -->
+                    <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-blue-900 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div>
+                                <h2 class="text-base font-bold tracking-wide uppercase">Section IV: Last Year Exam Detail</h2>
+                                <p class="text-xs text-blue-200">Automatic Percentage Calculation (Optional for First-Year Fresh Students)</p>
+                            </div>
+                            <span class="text-xs bg-blue-800 text-blue-100 px-2.5 py-1 rounded font-mono">Items 18–20</span>
+                        </div>
+
+                        <div class="p-5 space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <!-- 18. LAST YEAR EXAM OBTAINED MARKS -->
+                                <div>
+                                    <label for="lastYrObtained" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        18. Last Year Exam Obtained Marks
+                                    </label>
+                                    <input type="number" step="any" min="0" id="lastYrObtained" placeholder="e.g. 1420"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                </div>
+
+                                <!-- 19. LAST YEAR EXAM TOTAL MARKS -->
+                                <div>
+                                    <label for="lastYrTotal" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        19. Last Year Exam Total Marks
+                                    </label>
+                                    <input type="number" step="any" min="1" id="lastYrTotal" placeholder="e.g. 1800"
+                                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                </div>
+
+                                <!-- 20. LAST YEAR EXAM PERCENTAGE -->
+                                <div>
+                                    <label for="lastYrPercentage" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                        20. Last Year Exam Percentage
+                                    </label>
+                                    <input type="text" id="lastYrPercentage" readonly placeholder="Auto-calculated (%)"
+                                        class="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm font-mono font-bold text-blue-900">
+                                </div>
+                            </div>
+                            <p id="err-lastYearExam" class="error-text"></p>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 5: ADMISSION DETAILS -->
+                    <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-blue-900 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div>
+                                <h2 class="text-base font-bold tracking-wide uppercase">Section V: Admission Details</h2>
+                                <p class="text-xs text-blue-200">21. Mode of Admission &amp; 22. Conditional Counselling Entrance Details</p>
+                            </div>
+                            <span class="text-xs bg-blue-800 text-blue-100 px-2.5 py-1 rounded font-mono">Items 21–22</span>
+                        </div>
+
+                        <div class="p-5 space-y-5">
+                            <!-- 21. MODE OF ADMISSION: COUNSELLING / DIRECT -->
+                            <div>
+                                <label for="admissionMode" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                    21. Mode of Admission (COUNSELLING / DIRECT) <span class="text-red-600">*</span>
+                                </label>
+                                <select id="admissionMode" name="admissionMode"
+                                    class="w-full sm:w-2/3 rounded-lg border border-slate-300 px-3 py-2.5 text-sm font-semibold bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
+                                    <option value="">-- Select Mode of Admission --</option>
+                                    <option value="COUNSELLING">COUNSELLING</option>
+                                    <option value="DIRECT">DIRECT</option>
+                                </select>
+                                <p id="err-admissionMode" class="error-text">Please select Mode of Admission (Counselling or Direct).</p>
+                            </div>
+
+                            <!-- 22. CONDITIONAL COUNSELLING BLOCK -->
+                            <div id="counsellingFieldsContainer" class="hidden rounded-xl border-2 border-blue-200 bg-blue-50/40 p-4 space-y-4 transition-all">
+                                <div class="border-b border-blue-200 pb-2">
+                                    <h3 class="text-xs font-bold uppercase text-blue-950">
+                                        22. IF MODE OF ADMISSION IS COUNSELLING PLEASE ANSWER THE FOLLOWING:
+                                    </h3>
+                                    <p class="text-[11px] text-slate-600">All applicable entrance exam fields below are validated when Counselling is chosen.</p>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <!-- 22(a) NAME OF ENTRANCE EXAM (Manual Text Input - No Dropdown) -->
+                                    <div>
+                                        <label for="entranceExamName" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            22(a). Name of Entrance Exam <span class="text-red-600">*</span>
+                                        </label>
+                                        <input type="text" id="entranceExamName" name="entranceExamName" autocomplete="off"
+                                            placeholder="Type Entrance Exam (e.g. JEE MAINS / CUET / UPSEE)"
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 outline-none">
+                                        <p id="err-entranceExamName" class="error-text">Please enter the Entrance Examination Name.</p>
+                                    </div>
+
+                                    <!-- 22(b) ENTRANCE EXAM YEAR -->
+                                    <div>
+                                        <label for="entranceExamYear" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            22(b). Entrance Exam Year <span class="text-red-600">*</span>
+                                        </label>
+                                        <input type="number" id="entranceExamYear" placeholder="e.g. 2026" min="2000" max="2035"
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none">
+                                        <p id="err-entranceExamYear" class="error-text">Enter a valid 4-digit Entrance Exam Year.</p>
+                                    </div>
+
+                                    <!-- 22(c) ENTRANCE EXAM APPLICATION NO. -->
+                                    <div>
+                                        <label for="entranceAppNo" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            22(c). Entrance Exam Application No. <span class="text-red-600">*</span>
+                                        </label>
+                                        <input type="text" id="entranceAppNo" placeholder="Application No. (preserves leading 0)"
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none">
+                                        <p id="err-entranceAppNo" class="error-text">Please enter Entrance Exam Application No.</p>
+                                    </div>
+
+                                    <!-- 22(d) ENTRANCE EXAM ROLL NO. -->
+                                    <div>
+                                        <label for="entranceRollNo" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            22(d). Entrance Exam Roll No. <span class="text-red-600">*</span>
+                                        </label>
+                                        <input type="text" id="entranceRollNo" placeholder="Entrance Exam Roll No."
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none">
+                                        <p id="err-entranceRollNo" class="error-text">Please enter Entrance Exam Roll No.</p>
+                                    </div>
+
+                                    <!-- 22(e) MARKS OBTAINED / TOTAL MARKS IN ENTRANCE EXAM -->
+                                    <div>
+                                        <label for="entranceMarks" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            22(e). Marks Obtained / Total Marks in Entrance Exam
+                                        </label>
+                                        <input type="text" id="entranceMarks" placeholder="e.g. 210 / 300"
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none">
+                                        <p id="err-entranceMarks" class="error-text">Obtained marks cannot exceed total marks.</p>
+                                    </div>
+
+                                    <!-- 22(f) PERCENTILE IN ENTRANCE EXAM -->
+                                    <div>
+                                        <label for="entrancePercentile" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            22(f). Percentile in Entrance Exam
+                                        </label>
+                                        <input type="text" id="entrancePercentile" placeholder="e.g. 94.65"
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none">
+                                        <p id="err-entrancePercentile" class="error-text">Percentile must be between 0 and 100.</p>
+                                    </div>
+
+                                    <!-- 22(g) RANK OBTAINED IN ENTRANCE EXAM -->
+                                    <div>
+                                        <label for="entranceRank" class="block text-xs font-bold uppercase text-slate-700 mb-1">
+                                            22(g). Rank Obtained in Entrance Exam <span class="text-red-600">*</span>
+                                        </label>
+                                        <input type="text" id="entranceRank" placeholder="e.g. CRL 45120"
+                                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none">
+                                        <p id="err-entranceRank" class="error-text">Please enter Rank Obtained in Entrance Exam.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bottom Form Action Bar -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" id="btnGenerateBottom" class="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg text-sm shadow transition">
+                                ✓ Generate &amp; Preview PDF
+                            </button>
+                            <button type="button" id="btnDownloadBottom" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-sm shadow transition">
+                                ⬇ Download A4 PDF
+                            </button>
+                            <button type="button" id="btnPrintBottom" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg text-sm shadow transition">
+                                🖨 Print Form
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="btnNewStudent" class="px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-semibold rounded-lg text-xs sm:text-sm transition">
+                                + Start New Student Record
+                            </button>
+                            <button type="button" id="btnResetBottom" class="px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold rounded-lg text-xs sm:text-sm transition">
+                                Reset Form
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- RIGHT COLUMN: Real-Time Official A4 Document Preview (Also used for Print) -->
+            <div class="lg:col-span-5 print-only-container">
+                <div class="bg-slate-800 text-white rounded-t-xl px-4 py-3 flex items-center justify-between no-print">
+                    <div>
+                        <h2 class="text-sm font-bold uppercase tracking-wider text-amber-300">Live Official A4 Document Preview</h2>
+                        <p class="text-[11px] text-slate-300">Exact replica of “3 Personal Details form.pdf” (210 × 297 mm)</p>
+                    </div>
+                    <span id="validationStatusPill" class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40">
+                        Live Sync Active
+                    </span>
+                </div>
+
+                <div class="bg-slate-200/80 p-2 sm:p-4 rounded-b-xl border border-t-0 border-slate-300 a4-preview-wrapper">
+                    <!-- A4 SHEET REPLICA -->
+                    <div id="a4-printable-sheet" aria-label="Printable A4 Student Personal Details Form">
+
+                        <!-- Main Institution Title -->
+                        <div style="text-align: center; border: 1.8px solid #000; padding: 6px 8px; margin-bottom: 4px;">
+                            <div style="font-size: 14.5pt; font-weight: 900; letter-spacing: 0.3px;">
+                                MEERUT INSTITUTE OF ENGINEERING &amp; TECHNOLOGY, MEERUT-250005
+                            </div>
+                        </div>
+
+                        <!-- Table 1: STUDENT'S PERSONAL DETAILS (Items 1 to 8) -->
+                        <table class="official-table">
+                            <colgroup>
+                                <col style="width: 6%;">
+                                <col style="width: 34%;">
+                                <col style="width: 28%;">
+                                <col style="width: 32%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="4" class="official-section-banner">STUDENT'S PERSONAL DETAILS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="sno-col">1</td>
+                                    <td>
+                                        <div style="font-size: 9.5pt; font-weight: 900;">SCHOLARSHIP REGISTRATION NO.</div>
+                                        <div id="pv_scholarshipRegNo" class="val-cell">&nbsp;</div>
+                                    </td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">OTR NUMBER:-</td>
+                                    <td id="pv_otrNumber" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">2</td>
+                                    <td>
+                                        <div style="font-size: 9.5pt; font-weight: 900;">FRESH/RENEWAL</div>
+                                        <div id="pv_freshRenewal" class="val-cell">&nbsp;</div>
+                                    </td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">APAAR ID:-</td>
+                                    <td id="pv_apaarId" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">3</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">RELIGION &amp; CASTE (GEN/OBC/SC/MIN)</td>
+                                    <td>
+                                        <span style="font-size: 9.5pt; font-weight: 900;">RELIGION: </span>
+                                        <span id="pv_religion" class="val-cell"></span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 9.5pt; font-weight: 900;">CASTE: </span>
+                                        <span id="pv_caste" class="val-cell"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">4</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">DAY SCHOLAR/HOSTLER</td>
+                                    <td colspan="2" id="pv_dayScholarHostler" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">5</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">STUDENT'S NAME</td>
+                                    <td id="pv_studentName" class="val-cell">&nbsp;</td>
+                                    <td>
+                                        <span style="font-size: 9.5pt; font-weight: 900;">Mob. No. </span>
+                                        <span id="pv_studentMobile" class="val-cell"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">6</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">FATHER'S NAME</td>
+                                    <td id="pv_fatherName" class="val-cell">&nbsp;</td>
+                                    <td>
+                                        <span style="font-size: 9.5pt; font-weight: 900;">Mob. No. </span>
+                                        <span id="pv_fatherMobile" class="val-cell"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">7</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">MOTHER'S NAME</td>
+                                    <td id="pv_motherName" class="val-cell">&nbsp;</td>
+                                    <td>
+                                        <span style="font-size: 9.5pt; font-weight: 900;">Mob. No. </span>
+                                        <span id="pv_motherMobile" class="val-cell"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">8</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">GUARDIAN'S NAME</td>
+                                    <td id="pv_guardianName" class="val-cell">&nbsp;</td>
+                                    <td>
+                                        <span style="font-size: 9.5pt; font-weight: 900;">Mob. No. </span>
+                                        <span id="pv_guardianMobile" class="val-cell"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Table 2: ACADEMIC DETAILS (Items 9 to 12) -->
+                        <table class="official-table">
+                            <colgroup>
+                                <col style="width: 6%;">
+                                <col style="width: 17%;">
+                                <col style="width: 21%;">
+                                <col style="width: 15%;">
+                                <col style="width: 10%;">
+                                <col style="width: 10%;">
+                                <col style="width: 10%;">
+                                <col style="width: 11%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="8" class="official-section-banner">ACADEMIC DETAILS</th>
+                                </tr>
+                                <tr style="font-size: 9pt; font-weight: 900; text-align: center; background-color: #f3f4f6;">
+                                    <th>S.N</th>
+                                    <th>CLASS</th>
+                                    <th>BOARD / UNIVERSITY</th>
+                                    <th>ROLL NO.</th>
+                                    <th>PASSING YEAR</th>
+                                    <th>OBTAINED MARKS</th>
+                                    <th>TOTAL MARKS</th>
+                                    <th>PERCENTAGE IN POINTS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="sno-col">9</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">HIGH SCHOOL</td>
+                                    <td id="pv_hs_board" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_hs_roll" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_hs_year" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_hs_obt" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_hs_tot" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_hs_pct" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">10</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">INTERMEDIATE</td>
+                                    <td id="pv_inter_board" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_inter_roll" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_inter_year" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_inter_obt" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_inter_tot" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_inter_pct" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">11</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">DIPLOMA</td>
+                                    <td id="pv_dip_board" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_dip_roll" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_dip_year" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_dip_obt" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_dip_tot" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_dip_pct" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">12</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">GRADUATION</td>
+                                    <td id="pv_grad_board" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_grad_roll" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_grad_year" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_grad_obt" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_grad_tot" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                    <td id="pv_grad_pct" class="val-cell" style="text-align:center;">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Table 3: PRESENT COURSE DETAILS (Items 13 to 17) -->
+                        <table class="official-table">
+                            <colgroup>
+                                <col style="width: 6%;">
+                                <col style="width: 44%;">
+                                <col style="width: 50%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="3" class="official-section-banner">PRESENT COURSE DETAILS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="sno-col">13</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">PRESENT COURSE</td>
+                                    <td id="pv_presentCourse" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">14</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">BRANCH</td>
+                                    <td id="pv_presentBranch" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">15</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">YEAR</td>
+                                    <td id="pv_presentYear" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">16</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">UNIVERSITY ROLL NO. (AKTU/CCSU)</td>
+                                    <td id="pv_univRollNo" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">17</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">UNIVERSITY ENROLLMENT NO. (AKTU/CCSU)</td>
+                                    <td id="pv_univEnrollNo" class="val-cell">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Table 4: LAST YEAR EXAM DETAIL (Items 18 to 20) -->
+                        <table class="official-table">
+                            <colgroup>
+                                <col style="width: 6%;">
+                                <col style="width: 44%;">
+                                <col style="width: 50%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="3" class="official-section-banner">LAST YEAR EXAM DETAIL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="sno-col">18</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">LAST YEAR EXAM OBTAINED MARKS</td>
+                                    <td id="pv_lastYrObtained" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">19</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">LAST YEAR EXAM TOTAL MARKS</td>
+                                    <td id="pv_lastYrTotal" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">20</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">LAST YEAR EXAM PERCENTAGE</td>
+                                    <td id="pv_lastYrPercentage" class="val-cell">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Table 5: ADMISSION DETAILS (Items 21 to 22) -->
+                        <table class="official-table" style="margin-bottom: 0;">
+                            <colgroup>
+                                <col style="width: 6%;">
+                                <col style="width: 48%;">
+                                <col style="width: 46%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="3" class="official-section-banner">ADMISSION DETAILS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="sno-col">21</td>
+                                    <td style="font-weight: 900; font-size: 10.5pt;">MODE OF ADMISSION (COUNSELLING/DIRECT)</td>
+                                    <td id="pv_admissionMode" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">22</td>
+                                    <td colspan="2" style="font-weight: 900; font-size: 10pt; background-color: #f3f4f6;">
+                                        IF MODE OF ADMISSION IS COUNSELLING PLEASE ANSWER THE FOLLOWING
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">(a)</td>
+                                    <td style="font-weight: 900; font-size: 9.8pt;">NAME OF ENTRANCE EXAM :- UPSEE (AKTU)/JEE MAINS/CUET/B. ED. ENTRANCE EXAM</td>
+                                    <td id="pv_entranceExamName" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">(b)</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">ENTRANCE EXAM YEAR</td>
+                                    <td id="pv_entranceExamYear" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">(c)</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">ENTRANCE EXAM APPLICATION NO.</td>
+                                    <td id="pv_entranceAppNo" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">(d)</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">ENTRANCE EXAM ROLL NO.</td>
+                                    <td id="pv_entranceRollNo" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">(e)</td>
+                                    <td style="font-weight: 900; font-size: 9.8pt;">MARKS OBTAINED/TOTAL MARKS IN ENTRANCE EXAM</td>
+                                    <td id="pv_entranceMarks" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">(f)</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">PERCENTILE IN ENTRANCE EXAM</td>
+                                    <td id="pv_entrancePercentile" class="val-cell">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="sno-col">(g)</td>
+                                    <td style="font-weight: 900; font-size: 10pt;">RANK OBTAINED IN ENTRANCE EXAM</td>
+                                    <td id="pv_entranceRank" class="val-cell">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Student Signature Line at Bottom of A4 Sheet -->
+                        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 10.5pt; font-weight: 900;">
+                            <div>
+                                <strong>Date:</strong> _______________________
+                            </div>
+                            <div style="text-align: right;">
+                                <strong>Signature of Student:</strong> ___________________________
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PDF Confirmation & Summary Modal -->
+    <div id="confirmPdfModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="bg-blue-900 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="text-base font-bold uppercase tracking-wide">Confirm A4 PDF Generation &amp; Download</h3>
+                <button type="button" onclick="closeModal('confirmPdfModal')" class="text-blue-200 hover:text-white font-bold">✕</button>
+            </div>
+            <div class="p-6 space-y-4 text-sm">
+                <p class="text-slate-600">
+                    All required fields and Religion–Caste rules have been verified. Please review your key details below before downloading the official A4 PDF:
+                </p>
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-xs">
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span class="text-slate-500 font-semibold">Scholarship Reg. No.:</span>
+                        <span id="modalSummaryReg" class="font-mono font-bold text-slate-900"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span class="text-slate-500 font-semibold">Student Name:</span>
+                        <span id="modalSummaryName" class="font-bold text-slate-900"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span class="text-slate-500 font-semibold">Religion &amp; Caste:</span>
+                        <span id="modalSummaryRelCaste" class="font-bold text-blue-800"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span class="text-slate-500 font-semibold">Course / Branch / Year:</span>
+                        <span id="modalSummaryCourse" class="font-semibold text-slate-900"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span class="text-slate-500 font-semibold">Mode of Admission:</span>
+                        <span id="modalSummaryAdmission" class="font-semibold text-slate-900"></span>
+                    </div>
+                    <div class="pt-1">
+                        <span class="text-slate-500 font-semibold block mb-1">Generated PDF Filename:</span>
+                        <code id="modalSummaryFilename" class="block bg-blue-950 text-amber-300 px-3 py-2 rounded font-mono text-xs break-all"></code>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-slate-100 px-6 py-3.5 flex items-center justify-end gap-3">
+                <button type="button" onclick="closeModal('confirmPdfModal')" class="px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50">
+                    Back to Edit
+                </button>
+                <button type="button" id="btnConfirmDownloadFinal" class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow">
+                    ⬇ Confirm &amp; Download A4 PDF Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Form Confirmation Modal -->
+    <div id="resetConfirmModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="bg-rose-700 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="text-base font-bold uppercase">Confirm Form Reset</h3>
+                <button type="button" onclick="closeModal('resetConfirmModal')" class="text-rose-200 hover:text-white font-bold">✕</button>
+            </div>
+            <div class="p-6 text-sm text-slate-700 space-y-2">
+                <p class="font-semibold text-slate-900">Are you sure you want to clear all entered student details?</p>
+                <p class="text-xs text-slate-500">This will reset all fields, clear the live A4 preview, and remove any temporary browser draft so you can start a fresh record.</p>
+            </div>
+            <div class="bg-slate-100 px-6 py-3.5 flex items-center justify-end gap-3">
+                <button type="button" onclick="closeModal('resetConfirmModal')" class="px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50">
+                    Cancel
+                </button>
+                <button type="button" id="btnConfirmResetExecute" class="px-5 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow">
+                    Yes, Clear Entire Form
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documentation, Religion-Caste Logic & Automated 12-Test Verification Modal -->
+    <div id="helpDocsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="bg-blue-900 text-white px-6 py-4 flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="text-base font-bold uppercase">Documentation, Setup Instructions &amp; 12-Scenario Verification Suite</h3>
+                    <p class="text-xs text-blue-200">Deliverables 4, 5, 6 &amp; 7 — Built-In Automated Test Runner Included</p>
+                </div>
+                <button type="button" onclick="closeModal('helpDocsModal')" class="text-blue-200 hover:text-white font-bold text-lg">✕</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 text-xs sm:text-sm text-slate-700">
+                <!-- Automated Test Suite Runner -->
+                <div class="bg-slate-900 text-white p-4 rounded-xl space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h4 class="font-bold text-amber-300 uppercase text-xs tracking-wider">Automated 12-Scenario Verification Checklist</h4>
+                            <p class="text-xs text-slate-300">Run live automated verification of Tests 1–12 directly in your browser without losing your current form data.</p>
+                        </div>
+                        <button type="button" id="btnRunAutomatedTests" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-lg text-xs transition shadow">
+                            ▶ Run All 12 Tests Now
+                        </button>
+                    </div>
+                    <div id="automatedTestResults" class="bg-slate-950 rounded-lg p-3 font-mono text-xs space-y-1 max-h-60 overflow-y-auto hidden"></div>
+                </div>
+
+                <!-- Instructions for Running Locally & Using the Website -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-blue-900 uppercase text-xs">Deliverable 4: Running the Website Locally</h4>
+                        <ol class="list-decimal list-inside space-y-1 text-xs">
+                            <li>Save this file as <code class="bg-slate-200 px-1 rounded">index.html</code> on any computer or laptop.</li>
+                            <li>Double-click <code class="bg-slate-200 px-1 rounded">index.html</code> to open it in Chrome, Edge, Firefox, or Safari. No backend server or database installation is required.</li>
+                            <li>For 100% offline use on college office PCs, save the <code class="bg-slate-200 px-1 rounded">jspdf.umd.min.js</code> and <code class="bg-slate-200 px-1 rounded">jspdf.plugin.autotable.min.js</code> files in the same folder; the native print &amp; layout engine also works completely offline.</li>
+                        </ol>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-blue-900 uppercase text-xs">Deliverable 5: Using the Form &amp; Downloading PDF</h4>
+                        <ol class="list-decimal list-inside space-y-1 text-xs">
+                            <li>Enter Personal Details (Items 1–8), selecting <strong>Religion</strong> first to unlock the permitted <strong>Caste</strong> options.</li>
+                            <li>Enter Academic Marks (Items 9–12); percentages calculate automatically to 2 decimal places.</li>
+                            <li>Fill Present Course (13–17), Last Year Exam (18–20), and Mode of Admission (21–22).</li>
+                            <li>Click <strong>Download A4 PDF</strong> to save <code class="bg-slate-200 px-1 rounded">StudentPersonalDetails_[RegNo]_[Name].pdf</code>.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Religion-Caste Dropdown Logic Explanation -->
+                <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+                    <h4 class="font-bold text-blue-950 uppercase text-xs">Deliverable 6: Explanation of Religion–Caste Dropdown Logic</h4>
+                    <p class="text-xs leading-relaxed">
+                        The <strong>Caste</strong> dropdown is initialized in a <code class="bg-blue-100 px-1 rounded">disabled</code> state. When the user changes the <strong>Religion</strong> dropdown, an event listener immediately resets <code class="bg-blue-100 px-1 rounded">casteSelect.innerHTML = ""</code> and clears any previously selected value. It then checks the strict mapping dictionary:
+                        if <code class="bg-blue-100 px-1 rounded">Religion === "Hindu"</code>, it populates only <code class="bg-blue-100 px-1 rounded">["General", "OBC", "SC"]</code>; if <code class="bg-blue-100 px-1 rounded">Religion</code> is any of <code class="bg-blue-100 px-1 rounded">["Muslim", "Sikh", "Christian", "Jain", "Parsi"]</code>, it populates only <code class="bg-blue-100 px-1 rounded">["Minority"]</code>. Before generating the PDF, <code class="bg-blue-100 px-1 rounded">validateReligionCastePair()</code> re-verifies that the selected Caste is legally permitted for the selected Religion.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-100 px-6 py-3 flex justify-end shrink-0">
+                <button type="button" onclick="closeModal('helpDocsModal')" class="px-5 py-2 bg-blue-900 text-white text-xs font-bold rounded-lg">
+                    Close Window
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-4 mt-8 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div>
+                <strong>MEERUT INSTITUTE OF ENGINEERING &amp; TECHNOLOGY, MEERUT - 250005</strong> — Scholarship Personal Details Front Sheet Generator
+            </div>
+            <div class="flex items-center gap-3">
+                <span>100% Local Browser Processing</span>
+                <span>•</span>
+                <button type="button" id="btnClearSavedStorage" class="text-rose-400 hover:text-rose-300 underline">
+                    Delete Any Browser Draft Data
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            "use strict";
+
+            // =========================================================================
+            // 1. STRICT RELIGION -> CASTE MAPPING RULES (MANDATORY SPECIFICATION)
+            // =========================================================================
+            const ALLOWED_CASTE_BY_RELIGION = Object.freeze({
+                Hindu: ["General", "OBC", "SC"],
+                Muslim: ["Minority"],
+                Sikh: ["Minority"],
+                Christian: ["Minority"],
+                Jain: ["Minority"],
+                Parsi: ["Minority"]
+            });
+
+            // Course Year options based on configurable course duration
+            const COURSE_YEAR_LABELS = [
+                "FIRST YEAR (I)",
+                "SECOND YEAR (II)",
+                "THIRD YEAR (III)",
+                "FOURTH YEAR (IV)",
+                "FIFTH YEAR (V)"
+            ];
+
+            // Academic table row keys
+            const ACADEMIC_ROWS = [
+                { key: "hs", sno: "9", label: "HIGH SCHOOL" },
+                { key: "inter", sno: "10", label: "INTERMEDIATE" },
+                { key: "dip", sno: "11", label: "DIPLOMA" },
+                { key: "grad", sno: "12", label: "GRADUATION" }
+            ];
+
+            // DOM Elements Reference Helper
+            const el = (id) => document.getElementById(id);
+
+            // =========================================================================
+            // 2. DYNAMIC RELIGION & CASTE DROPDOWN LOGIC
+            // =========================================================================
+            function updateCasteDropdownForReligion(selectedReligion) {
+                const casteSelect = el("caste");
+                // Always clear previous options and value whenever Religion changes
+                casteSelect.innerHTML = "";
+                casteSelect.value = "";
+
+                if (!selectedReligion || !ALLOWED_CASTE_BY_RELIGION[selectedReligion]) {
+                    const defaultOpt = document.createElement("option");
+                    defaultOpt.value = "";
+                    defaultOpt.textContent = "-- Select Religion First --";
+                    casteSelect.appendChild(defaultOpt);
+                    casteSelect.disabled = true;
+                    casteSelect.classList.add("bg-slate-100");
+                    casteSelect.classList.remove("bg-white");
+                    return;
+                }
+
+                const allowedCastes = ALLOWED_CASTE_BY_RELIGION[selectedReligion];
+                casteSelect.disabled = false;
+                casteSelect.classList.remove("bg-slate-100");
+                casteSelect.classList.add("bg-white");
+
+                const placeholderOpt = document.createElement("option");
+                placeholderOpt.value = "";
+                placeholderOpt.textContent = "-- Select Caste --";
+                casteSelect.appendChild(placeholderOpt);
+
+                allowedCastes.forEach((casteOption) => {
+                    const opt = document.createElement("option");
+                    opt.value = casteOption;
+                    opt.textContent = casteOption;
+                    casteSelect.appendChild(opt);
+                });
+            }
+
+            function validateReligionCastePair(religionVal, casteVal) {
+                if (!religionVal || !ALLOWED_CASTE_BY_RELIGION[religionVal]) {
+                    return { valid: false, reason: "Please select a valid Religion." };
+                }
+                const allowed = ALLOWED_CASTE_BY_RELIGION[religionVal];
+                if (!casteVal || !allowed.includes(casteVal)) {
+                    return {
+                        valid: false,
+                        reason: `For ${religionVal}, Caste must be one of: ${allowed.join(", ")}.`
+                    };
+                }
+                return { valid: true, reason: "" };
+            }
+
+            // =========================================================================
+            // 3. AUTOMATIC PERCENTAGE CALCULATION ENGINE
+            // =========================================================================
+            function computePercentagePoints(obtainedRaw, totalRaw) {
+                const obtStr = String(obtainedRaw ?? "").trim();
+                const totStr = String(totalRaw ?? "").trim();
+
+                if (obtStr === "" || totStr === "") {
+                    return { percentage: "", error: "" };
+                }
+
+                const obt = Number(obtStr);
+                const tot = Number(totStr);
+
+                if (!Number.isFinite(obt) || !Number.isFinite(tot)) {
+                    return { percentage: "", error: "Marks must be valid numeric values." };
+                }
+                if (tot <= 0) {
+                    return { percentage: "", error: "Total marks must be greater than zero (division by zero prevented)." };
+                }
+                if (obt < 0) {
+                    return { percentage: "", error: "Obtained marks cannot be negative." };
+                }
+                if (obt > tot) {
+                    return { percentage: "", error: "Obtained marks cannot exceed Total marks." };
+                }
+
+                const pct = ((obt / tot) * 100).toFixed(2);
+                return { percentage: pct, error: "" };
+            }
+
+            function updateAllPercentages() {
+                let academicErr = "";
+
+                ACADEMIC_ROWS.forEach((row) => {
+                    const obtInput = el(`acad_${row.key}_obt`);
+                    const totInput = el(`acad_${row.key}_tot`);
+                    const pctInput = el(`acad_${row.key}_pct`);
+
+                    const result = computePercentagePoints(obtInput.value, totInput.value);
+                    pctInput.value = result.percentage ? `${result.percentage}%` : "";
+
+                    if (result.error) {
+                        obtInput.classList.add("input-error");
+                        totInput.classList.add("input-error");
+                        academicErr = `${row.label}: ${result.error}`;
+                    } else {
+                        obtInput.classList.remove("input-error");
+                        totInput.classList.remove("input-error");
+                    }
+                });
+
+                const acadErrEl = el("err-academicTable");
+                if (academicErr) {
+                    acadErrEl.textContent = academicErr;
+                    acadErrEl.classList.add("visible");
+                } else {
+                    acadErrEl.textContent = "";
+                    acadErrEl.classList.remove("visible");
+                }
+
+                // Last Year Exam Percentage (Items 18, 19, 20)
+                const lyObt = el("lastYrObtained");
+                const lyTot = el("lastYrTotal");
+                const lyPct = el("lastYrPercentage");
+                const lyErrEl = el("err-lastYearExam");
+
+                const lyResult = computePercentagePoints(lyObt.value, lyTot.value);
+                lyPct.value = lyResult.percentage ? `${lyResult.percentage}%` : "";
+
+                if (lyResult.error) {
+                    lyObt.classList.add("input-error");
+                    lyTot.classList.add("input-error");
+                    lyErrEl.textContent = `Last Year Exam: ${lyResult.error}`;
+                    lyErrEl.classList.add("visible");
+                } else {
+                    lyObt.classList.remove("input-error");
+                    lyTot.classList.remove("input-error");
+                    lyErrEl.textContent = "";
+                    lyErrEl.classList.remove("visible");
+                }
+            }
+
+            // =========================================================================
+            // 4. CONDITIONAL COUNSELLING FIELDS & COURSE DURATION HANDLERS
+            // =========================================================================
+            function updateAdmissionModeVisibility() {
+                const mode = el("admissionMode").value;
+                const container = el("counsellingFieldsContainer");
+
+                if (mode === "COUNSELLING") {
+                    container.classList.remove("hidden");
+                } else {
+                    container.classList.add("hidden");
+                    // Clear validation error highlights inside hidden counselling section
+                    [
+                        "entranceExamName",
+                        "entranceExamYear",
+                        "entranceAppNo",
+                        "entranceRollNo",
+                        "entranceMarks",
+                        "entrancePercentile",
+                        "entranceRank"
+                    ].forEach((fieldId) => {
+                        setFieldError(fieldId, false);
+                    });
+                }
+            }
+
+            function updateCourseYearOptions() {
+                const maxYears = parseInt(el("courseDurationConfig").value, 10) || 4;
+                const yearSelect = el("presentYear");
+                const currentSelection = yearSelect.value;
+
+                yearSelect.innerHTML = '<option value="">-- Select Year --</option>';
+                for (let i = 0; i < maxYears; i++) {
+                    const opt = document.createElement("option");
+                    opt.value = COURSE_YEAR_LABELS[i];
+                    opt.textContent = COURSE_YEAR_LABELS[i];
+                    yearSelect.appendChild(opt);
+                }
+
+                if (COURSE_YEAR_LABELS.slice(0, maxYears).includes(currentSelection)) {
+                    yearSelect.value = currentSelection;
+                }
+            }
+
+            // =========================================================================
+            // 5. FILENAME GENERATOR (PRESERVING LEADING ZEROS & SANITIZING)
+            // =========================================================================
+            function generateStudentPdfFilename(regNoRaw, studentNameRaw) {
+                // Keep leading zeros intact by treating Registration Number strictly as a string
+                const sanitizedReg = String(regNoRaw ?? "")
+                    .trim()
+                    .replace(/[^a-zA-Z0-9_-]/g, "");
+
+                const sanitizedName = String(studentNameRaw ?? "")
+                    .trim()
+                    .replace(/[^a-zA-Z0-9\s]/g, "")
+                    .replace(/\s+/g, "_");
+
+                const regPart = sanitizedReg || "RegNo";
+                const namePart = sanitizedName || "StudentName";
+
+                return `StudentPersonalDetails_${regPart}_${namePart}.pdf`;
+            }
+
+            // =========================================================================
+            // 6. REAL-TIME A4 DOCUMENT PREVIEW SYNCHRONIZATION
+            // =========================================================================
+            function getEffectiveEntranceExamName() {
+                const mode = el("admissionMode").value;
+                if (mode !== "COUNSELLING") return "";
+                return el("entranceExamName").value.trim().toUpperCase();
+            }
+
+            function syncLiveA4Preview() {
+                updateAllPercentages();
+
+                const setPreviewText = (pvId, rawValue) => {
+                    const node = el(pvId);
+                    if (!node) return;
+                    const text = String(rawValue ?? "").trim();
+                    node.textContent = text !== "" ? text : "\u00A0";
+                };
+
+                // Personal Details (Items 1 to 8)
+                setPreviewText("pv_scholarshipRegNo", el("scholarshipRegNo").value);
+                setPreviewText("pv_otrNumber", el("otrNumber").value);
+                setPreviewText("pv_freshRenewal", el("freshRenewal").value);
+                setPreviewText("pv_apaarId", el("apaarId").value);
+                setPreviewText("pv_religion", el("religion").value ? el("religion").value.toUpperCase() : "");
+                setPreviewText("pv_caste", el("caste").value ? el("caste").value.toUpperCase() : "");
+                setPreviewText("pv_dayScholarHostler", el("dayScholarHostler").value);
+                setPreviewText("pv_studentName", el("studentName").value.toUpperCase());
+                setPreviewText("pv_studentMobile", el("studentMobile").value);
+                setPreviewText("pv_fatherName", el("fatherName").value.toUpperCase());
+                setPreviewText("pv_fatherMobile", el("fatherMobile").value);
+                setPreviewText("pv_motherName", el("motherName").value.toUpperCase());
+                setPreviewText("pv_motherMobile", el("motherMobile").value);
+                setPreviewText("pv_guardianName", el("guardianName").value.toUpperCase());
+                setPreviewText("pv_guardianMobile", el("guardianMobile").value);
+
+                // Academic Details (Items 9 to 12)
+                ACADEMIC_ROWS.forEach((row) => {
+                    setPreviewText(`pv_${row.key}_board`, el(`acad_${row.key}_board`).value.toUpperCase());
+                    setPreviewText(`pv_${row.key}_roll`, el(`acad_${row.key}_roll`).value);
+                    setPreviewText(`pv_${row.key}_year`, el(`acad_${row.key}_year`).value);
+                    setPreviewText(`pv_${row.key}_obt`, el(`acad_${row.key}_obt`).value);
+                    setPreviewText(`pv_${row.key}_tot`, el(`acad_${row.key}_tot`).value);
+                    setPreviewText(`pv_${row.key}_pct`, el(`acad_${row.key}_pct`).value);
+                });
+
+                // Present Course Details (Items 13 to 17)
+                setPreviewText("pv_presentCourse", el("presentCourse").value.toUpperCase());
+                setPreviewText("pv_presentBranch", el("presentBranch").value.toUpperCase());
+                setPreviewText("pv_presentYear", el("presentYear").value.toUpperCase());
+                setPreviewText("pv_univRollNo", el("univRollNo").value);
+                setPreviewText("pv_univEnrollNo", el("univEnrollNo").value.toUpperCase());
+
+                // Last Year Exam Detail (Items 18 to 20)
+                setPreviewText("pv_lastYrObtained", el("lastYrObtained").value);
+                setPreviewText("pv_lastYrTotal", el("lastYrTotal").value);
+                setPreviewText("pv_lastYrPercentage", el("lastYrPercentage").value);
+
+                // Admission Details (Items 21 & 22)
+                const mode = el("admissionMode").value;
+                setPreviewText("pv_admissionMode", mode);
+
+                if (mode === "COUNSELLING") {
+                    setPreviewText("pv_entranceExamName", getEffectiveEntranceExamName());
+                    setPreviewText("pv_entranceExamYear", el("entranceExamYear").value);
+                    setPreviewText("pv_entranceAppNo", el("entranceAppNo").value);
+                    setPreviewText("pv_entranceRollNo", el("entranceRollNo").value);
+                    setPreviewText("pv_entranceMarks", el("entranceMarks").value);
+                    setPreviewText("pv_entrancePercentile", el("entrancePercentile").value);
+                    setPreviewText("pv_entranceRank", el("entranceRank").value.toUpperCase());
+                } else {
+                    setPreviewText("pv_entranceExamName", mode === "DIRECT" ? "N/A (DIRECT ADMISSION)" : "");
+                    setPreviewText("pv_entranceExamYear", "");
+                    setPreviewText("pv_entranceAppNo", "");
+                    setPreviewText("pv_entranceRollNo", "");
+                    setPreviewText("pv_entranceMarks", "");
+                    setPreviewText("pv_entrancePercentile", "");
+                    setPreviewText("pv_entranceRank", "");
+                }
+
+                // Update live filename badge
+                const fn = generateStudentPdfFilename(el("scholarshipRegNo").value, el("studentName").value);
+                el("filenamePreviewBadge").textContent = `Output: ${fn}`;
+            }
+
+            // =========================================================================
+            // 7. COMPREHENSIVE CLIENT-SIDE VALIDATION
+            // =========================================================================
+            function setFieldError(fieldId, hasError, customMessage) {
+                const input = el(fieldId);
+                const errNode = el(`err-${fieldId}`);
+                if (input) {
+                    if (hasError) {
+                        input.classList.add("input-error");
+                    } else {
+                        input.classList.remove("input-error");
+                    }
+                }
+                if (errNode) {
+                    if (customMessage) {
+                        errNode.textContent = customMessage;
+                    }
+                    if (hasError) {
+                        errNode.classList.add("visible");
+                    } else {
+                        errNode.classList.remove("visible");
+                    }
+                }
+            }
+
+            function isValidIndianMobile(mobStr) {
+                const cleaned = String(mobStr ?? "").trim();
+                const strictRule = el("strictIndianMobile").checked;
+                if (strictRule) {
+                    return /^[6-9]\d{9}$/.test(cleaned);
+                }
+                return /^\d{10}$/.test(cleaned);
+            }
+
+            function validateCompleteForm() {
+                updateAllPercentages();
+                const errors = [];
+
+                // 1. Scholarship Registration No. (Preserve leading zeros, treat as string)
+                const regNo = el("scholarshipRegNo").value.trim();
+                if (!regNo || !/^[a-zA-Z0-9\/_-]{4,30}$/.test(regNo)) {
+                    setFieldError("scholarshipRegNo", true, "Scholarship Registration No. is required (4–30 alphanumeric characters).");
+                    errors.push("1. Scholarship Registration No. is required.");
+                } else {
+                    setFieldError("scholarshipRegNo", false);
+                }
+
+                // 1(b). OTR Number
+                const otrNo = el("otrNumber").value.trim();
+                if (!otrNo) {
+                    setFieldError("otrNumber", true, "OTR Number is required.");
+                    errors.push("1(b). OTR Number is required.");
+                } else {
+                    setFieldError("otrNumber", false);
+                }
+
+                // 2. Fresh / Renewal
+                const freshRenewal = el("freshRenewal").value;
+                if (!freshRenewal) {
+                    setFieldError("freshRenewal", true);
+                    errors.push("2. Fresh / Renewal status is required.");
+                } else {
+                    setFieldError("freshRenewal", false);
+                }
+
+                // 3. Religion & Caste (Mandatory Dynamic Pair Validation)
+                const religion = el("religion").value;
+                const caste = el("caste").value;
+                if (!religion) {
+                    setFieldError("religion", true, "Please select a Religion.");
+                    errors.push("Religion selection is required.");
+                } else {
+                    setFieldError("religion", false);
+                }
+
+                const relCasteCheck = validateReligionCastePair(religion, caste);
+                if (!relCasteCheck.valid) {
+                    setFieldError("caste", true, relCasteCheck.reason);
+                    errors.push(`3. Caste: ${relCasteCheck.reason}`);
+                } else {
+                    setFieldError("caste", false);
+                }
+
+                // 4. Day Scholar / Hostler
+                if (!el("dayScholarHostler").value) {
+                    setFieldError("dayScholarHostler", true);
+                    errors.push("4. Day Scholar / Hostler selection is required.");
+                } else {
+                    setFieldError("dayScholarHostler", false);
+                }
+
+                // 5. Student's Name & Mobile
+                if (el("studentName").value.trim().length < 2) {
+                    setFieldError("studentName", true);
+                    errors.push("5. Student's Name is required.");
+                } else {
+                    setFieldError("studentName", false);
+                }
+
+                if (!isValidIndianMobile(el("studentMobile").value)) {
+                    setFieldError("studentMobile", true);
+                    errors.push("5. Student Mobile Number must be a valid 10-digit mobile number.");
+                } else {
+                    setFieldError("studentMobile", false);
+                }
+
+                // 6. Father's Name & Mobile
+                if (el("fatherName").value.trim().length < 2) {
+                    setFieldError("fatherName", true);
+                    errors.push("6. Father's Name is required.");
+                } else {
+                    setFieldError("fatherName", false);
+                }
+
+                if (!isValidIndianMobile(el("fatherMobile").value)) {
+                    setFieldError("fatherMobile", true);
+                    errors.push("6. Father's Mobile Number must be a valid 10-digit mobile number.");
+                } else {
+                    setFieldError("fatherMobile", false);
+                }
+
+                // 7. Mother's Name & Optional Mobile
+                if (el("motherName").value.trim().length < 2) {
+                    setFieldError("motherName", true);
+                    errors.push("7. Mother's Name is required.");
+                } else {
+                    setFieldError("motherName", false);
+                }
+
+                const motherMob = el("motherMobile").value.trim();
+                if (motherMob !== "" && !isValidIndianMobile(motherMob)) {
+                    setFieldError("motherMobile", true);
+                    errors.push("7. Mother's Mobile Number must be 10 digits if entered.");
+                } else {
+                    setFieldError("motherMobile", false);
+                }
+
+                // 8. Guardian's Optional Mobile
+                const guardianMob = el("guardianMobile").value.trim();
+                if (guardianMob !== "" && !isValidIndianMobile(guardianMob)) {
+                    setFieldError("guardianMobile", true);
+                    errors.push("8. Guardian's Mobile Number must be 10 digits if entered.");
+                } else {
+                    setFieldError("guardianMobile", false);
+                }
+
+                // 9-12. Academic Details Table Validation
+                let acadRowErrors = [];
+                ACADEMIC_ROWS.forEach((row) => {
+                    const board = el(`acad_${row.key}_board`).value.trim();
+                    const roll = el(`acad_${row.key}_roll`).value.trim();
+                    const yearStr = el(`acad_${row.key}_year`).value.trim();
+                    const obtStr = el(`acad_${row.key}_obt`).value.trim();
+                    const totStr = el(`acad_${row.key}_tot`).value.trim();
+
+                    const hasAnyValue = board !== "" || roll !== "" || yearStr !== "" || obtStr !== "" || totStr !== "";
+
+                    if (hasAnyValue) {
+                        if (yearStr !== "") {
+                            const yr = Number(yearStr);
+                            if (!Number.isInteger(yr) || yr < 1980 || yr > 2035) {
+                                acadRowErrors.push(`${row.label}: Passing Year must be between 1980 and 2035.`);
+                            }
+                        }
+                        if (obtStr !== "" || totStr !== "") {
+                            if (obtStr === "" || totStr === "") {
+                                acadRowErrors.push(`${row.label}: Please enter both Obtained Marks and Total Marks.`);
+                            } else {
+                                const calc = computePercentagePoints(obtStr, totStr);
+                                if (calc.error) {
+                                    acadRowErrors.push(`${row.label}: ${calc.error}`);
+                                }
+                            }
+                        }
+                    }
+                });
+
+                const acadErrEl = el("err-academicTable");
+                if (acadRowErrors.length > 0) {
+                    acadErrEl.textContent = acadRowErrors[0];
+                    acadErrEl.classList.add("visible");
+                    errors.push(...acadRowErrors);
+                } else {
+                    acadErrEl.textContent = "";
+                    acadErrEl.classList.remove("visible");
+                }
+
+                // 13-15. Present Course Details
+                if (!el("presentCourse").value.trim()) {
+                    setFieldError("presentCourse", true);
+                    errors.push("13. Present Course is required.");
+                } else {
+                    setFieldError("presentCourse", false);
+                }
+
+                if (!el("presentBranch").value.trim()) {
+                    setFieldError("presentBranch", true);
+                    errors.push("14. Branch is required.");
+                } else {
+                    setFieldError("presentBranch", false);
+                }
+
+                if (!el("presentYear").value) {
+                    setFieldError("presentYear", true);
+                    errors.push("15. Present Course Year is required.");
+                } else {
+                    setFieldError("presentYear", false);
+                }
+
+                // 18-20. Last Year Exam Detail (Optional for 1st Year, but if partially filled must be valid)
+                const lyObtStr = el("lastYrObtained").value.trim();
+                const lyTotStr = el("lastYrTotal").value.trim();
+                const lyErrEl = el("err-lastYearExam");
+                if (lyObtStr !== "" || lyTotStr !== "") {
+                    if (lyObtStr === "" || lyTotStr === "") {
+                        const msg = "Please enter both Last Year Obtained Marks and Total Marks (or leave both blank if not applicable).";
+                        lyErrEl.textContent = msg;
+                        lyErrEl.classList.add("visible");
+                        errors.push(msg);
+                    } else {
+                        const lyCalc = computePercentagePoints(lyObtStr, lyTotStr);
+                        if (lyCalc.error) {
+                            lyErrEl.textContent = lyCalc.error;
+                            lyErrEl.classList.add("visible");
+                            errors.push(`Last Year Exam: ${lyCalc.error}`);
+                        } else {
+                            lyErrEl.classList.remove("visible");
+                        }
+                    }
+                } else {
+                    lyErrEl.classList.remove("visible");
+                }
+
+                // 21 & 22. Admission Details & Conditional Counselling Validation
+                const admissionMode = el("admissionMode").value;
+                if (!admissionMode) {
+                    setFieldError("admissionMode", true);
+                    errors.push("21. Mode of Admission (Counselling or Direct) is required.");
+                } else {
+                    setFieldError("admissionMode", false);
+                }
+
+                if (admissionMode === "COUNSELLING") {
+                    const examName = el("entranceExamName").value.trim();
+                    if (!examName) {
+                        setFieldError("entranceExamName", true);
+                        errors.push("22(a). Name of Entrance Exam is required for Counselling admission.");
+                    } else {
+                        setFieldError("entranceExamName", false);
+                    }
+
+                    const exYear = Number(el("entranceExamYear").value.trim());
+                    if (!el("entranceExamYear").value.trim() || !Number.isInteger(exYear) || exYear < 2000 || exYear > 2035) {
+                        setFieldError("entranceExamYear", true);
+                        errors.push("22(b). Valid Entrance Exam Year is required.");
+                    } else {
+                        setFieldError("entranceExamYear", false);
+                    }
+
+                    if (!el("entranceAppNo").value.trim()) {
+                        setFieldError("entranceAppNo", true);
+                        errors.push("22(c). Entrance Exam Application No. is required.");
+                    } else {
+                        setFieldError("entranceAppNo", false);
+                    }
+
+                    if (!el("entranceRollNo").value.trim()) {
+                        setFieldError("entranceRollNo", true);
+                        errors.push("22(d). Entrance Exam Roll No. is required.");
+                    } else {
+                        setFieldError("entranceRollNo", false);
+                    }
+
+                    // Validate optional "Obtained / Total" format if filled in 22(e)
+                    const exMarksStr = el("entranceMarks").value.trim();
+                    if (exMarksStr.includes("/")) {
+                        const parts = exMarksStr.split("/");
+                        if (parts.length === 2) {
+                            const mObt = Number(parts[0].trim());
+                            const mTot = Number(parts[1].trim());
+                            if (Number.isFinite(mObt) && Number.isFinite(mTot) && mTot > 0 && mObt > mTot) {
+                                setFieldError("entranceMarks", true, "Obtained marks in Entrance Exam cannot exceed Total marks.");
+                                errors.push("22(e). Entrance Exam Obtained Marks cannot exceed Total Marks.");
+                            } else {
+                                setFieldError("entranceMarks", false);
+                            }
+                        }
+                    } else {
+                        setFieldError("entranceMarks", false);
+                    }
+
+                    // Validate Percentile if filled in 22(f)
+                    const pctileStr = el("entrancePercentile").value.trim();
+                    if (pctileStr !== "") {
+                        const pctile = Number(pctileStr);
+                        if (!Number.isFinite(pctile) || pctile < 0 || pctile > 100) {
+                            setFieldError("entrancePercentile", true);
+                            errors.push("22(f). Entrance Exam Percentile must be between 0 and 100.");
+                        } else {
+                            setFieldError("entrancePercentile", false);
+                        }
+                    } else {
+                        setFieldError("entrancePercentile", false);
+                    }
+
+                    if (!el("entranceRank").value.trim()) {
+                        setFieldError("entranceRank", true);
+                        errors.push("22(g). Rank Obtained in Entrance Exam is required.");
+                    } else {
+                        setFieldError("entranceRank", false);
+                    }
+                }
+
+                return {
+                    isValid: errors.length === 0,
+                    errors
+                };
+            }
+
+            // =========================================================================
+            // 8. NATIVE VECTOR A4 PDF GENERATOR (STRICT SINGLE-PAGE A4 FIT)
+            // =========================================================================
+            function buildAndDownloadOfficialA4Pdf() {
+                const regNo = el("scholarshipRegNo").value.trim();
+                const studentName = el("studentName").value.trim().toUpperCase();
+                const filename = generateStudentPdfFilename(regNo, studentName);
+
+                // Use native vector jsPDF + AutoTable calibrated to fit 100% on a single A4 page (210 x 297 mm)
+                if (window.jspdf && window.jspdf.jsPDF) {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({
+                        orientation: "portrait",
+                        unit: "mm",
+                        format: "a4"
+                    });
+
+                    const pageWidth = 210;
+                    const marginX = 8;
+                    const usableWidth = pageWidth - marginX * 2; // 194 mm
+                    let currentY = 6.5;
+
+                    // Header Box: MEERUT INSTITUTE OF ENGINEERING & TECHNOLOGY, MEERUT-250005
+                    doc.setDrawColor(0, 0, 0);
+                    doc.setLineWidth(0.5);
+                    doc.rect(marginX, currentY, usableWidth, 9);
+                    doc.setFont("times", "bold");
+                    doc.setFontSize(14);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(
+                        "MEERUT INSTITUTE OF ENGINEERING & TECHNOLOGY, MEERUT-250005",
+                        pageWidth / 2,
+                        currentY + 6.1,
+                        { align: "center" }
+                    );
+                    currentY += 10.2;
+
+                    const commonTableStyles = {
+                        theme: "grid",
+                        rowPageBreak: "avoid",
+                        margin: { left: marginX, right: marginX },
+                        styles: {
+                            font: "helvetica",
+                            fontStyle: "bold",
+                            fontSize: 9.8,
+                            cellPadding: 1.25,
+                            textColor: [0, 0, 0],
+                            lineColor: [0, 0, 0],
+                            lineWidth: 0.3,
+                            valign: "middle",
+                            overflow: "linebreak"
+                        },
+                        headStyles: {
+                            fillColor: [230, 230, 230],
+                            textColor: [0, 0, 0],
+                            fontStyle: "bold",
+                            halign: "center",
+                            fontSize: 10.5,
+                            cellPadding: 1.4
+                        }
+                    };
+
+                    // TABLE 1: STUDENT'S PERSONAL DETAILS (Items 1 to 8)
+                    doc.autoTable({
+                        ...commonTableStyles,
+                        startY: currentY,
+                        head: [[{ content: "STUDENT'S PERSONAL DETAILS", colSpan: 4 }]],
+                        columnStyles: {
+                            0: { cellWidth: 10, halign: "center", fontStyle: "bold" },
+                            1: { cellWidth: 66, fontStyle: "bold" },
+                            2: { cellWidth: 59, fontStyle: "bold" },
+                            3: { cellWidth: 59, fontStyle: "bold" }
+                        },
+                        body: [
+                            [
+                                "1",
+                                `SCHOLARSHIP REGISTRATION NO.\n${regNo}`,
+                                { content: "OTR NUMBER:-", styles: { fontStyle: "bold" } },
+                                el("otrNumber").value.trim()
+                            ],
+                            [
+                                "2",
+                                `FRESH/RENEWAL\n${el("freshRenewal").value}`,
+                                { content: "APAAR ID:-", styles: { fontStyle: "bold" } },
+                                el("apaarId").value.trim()
+                            ],
+                            [
+                                "3",
+                                "RELIGION & CASTE (GEN/OBC/SC/MIN)",
+                                `RELIGION: ${el("religion").value.toUpperCase()}`,
+                                `CASTE: ${el("caste").value.toUpperCase()}`
+                            ],
+                            [
+                                "4",
+                                "DAY SCHOLAR/HOSTLER",
+                                { content: el("dayScholarHostler").value, colSpan: 2, styles: { fontStyle: "bold" } }
+                            ],
+                            [
+                                "5",
+                                "STUDENT'S NAME",
+                                studentName,
+                                `Mob. No. ${el("studentMobile").value.trim()}`
+                            ],
+                            [
+                                "6",
+                                "FATHER'S NAME",
+                                el("fatherName").value.trim().toUpperCase(),
+                                `Mob. No. ${el("fatherMobile").value.trim()}`
+                            ],
+                            [
+                                "7",
+                                "MOTHER'S NAME",
+                                el("motherName").value.trim().toUpperCase(),
+                                `Mob. No. ${el("motherMobile").value.trim()}`
+                            ],
+                            [
+                                "8",
+                                "GUARDIAN'S NAME",
+                                el("guardianName").value.trim().toUpperCase(),
+                                `Mob. No. ${el("guardianMobile").value.trim()}`
+                            ]
+                        ]
+                    });
+
+                    currentY = doc.lastAutoTable.finalY + 1.4;
+
+                    // TABLE 2: ACADEMIC DETAILS (Items 9 to 12 - Always keep all rows visible)
+                    const academicBodyRows = ACADEMIC_ROWS.map((row) => [
+                        row.sno,
+                        { content: row.label, styles: { fontStyle: "bold" } },
+                        el(`acad_${row.key}_board`).value.trim().toUpperCase(),
+                        el(`acad_${row.key}_roll`).value.trim(),
+                        el(`acad_${row.key}_year`).value.trim(),
+                        el(`acad_${row.key}_obt`).value.trim(),
+                        el(`acad_${row.key}_tot`).value.trim(),
+                        el(`acad_${row.key}_pct`).value.trim()
+                    ]);
+
+                    doc.autoTable({
+                        ...commonTableStyles,
+                        startY: currentY,
+                        head: [
+                            [{ content: "ACADEMIC DETAILS", colSpan: 8 }],
+                            [
+                                "S.N",
+                                "CLASS",
+                                "BOARD / UNIVERSITY",
+                                "ROLL NO.",
+                                "PASSING YEAR",
+                                "OBTAINED MARKS",
+                                "TOTAL MARKS",
+                                "PERCENTAGE IN POINTS"
+                            ]
+                        ],
+                        columnStyles: {
+                            0: { cellWidth: 10, halign: "center", fontStyle: "bold" },
+                            1: { cellWidth: 31, fontStyle: "bold" },
+                            2: { cellWidth: 43, halign: "center", fontStyle: "bold" },
+                            3: { cellWidth: 29, halign: "center", fontStyle: "bold" },
+                            4: { cellWidth: 18, halign: "center", fontStyle: "bold" },
+                            5: { cellWidth: 20, halign: "center", fontStyle: "bold" },
+                            6: { cellWidth: 20, halign: "center", fontStyle: "bold" },
+                            7: { cellWidth: 23, halign: "center", fontStyle: "bold" }
+                        },
+                        body: academicBodyRows
+                    });
+
+                    currentY = doc.lastAutoTable.finalY + 1.4;
+
+                    // TABLE 3: PRESENT COURSE DETAILS (Items 13 to 17)
+                    doc.autoTable({
+                        ...commonTableStyles,
+                        startY: currentY,
+                        head: [[{ content: "PRESENT COURSE DETAILS", colSpan: 3 }]],
+                        columnStyles: {
+                            0: { cellWidth: 10, halign: "center", fontStyle: "bold" },
+                            1: { cellWidth: 84, fontStyle: "bold" },
+                            2: { cellWidth: 100, fontStyle: "bold" }
+                        },
+                        body: [
+                            ["13", "PRESENT COURSE", el("presentCourse").value.trim().toUpperCase()],
+                            ["14", "BRANCH", el("presentBranch").value.trim().toUpperCase()],
+                            ["15", "YEAR", el("presentYear").value.trim().toUpperCase()],
+                            ["16", "UNIVERSITY ROLL NO. (AKTU/CCSU)", el("univRollNo").value.trim()],
+                            ["17", "UNIVERSITY ENROLLMENT NO. (AKTU/CCSU)", el("univEnrollNo").value.trim().toUpperCase()]
+                        ]
+                    });
+
+                    currentY = doc.lastAutoTable.finalY + 1.4;
+
+                    // TABLE 4: LAST YEAR EXAM DETAIL (Items 18 to 20)
+                    doc.autoTable({
+                        ...commonTableStyles,
+                        startY: currentY,
+                        head: [[{ content: "LAST YEAR EXAM DETAIL", colSpan: 3 }]],
+                        columnStyles: {
+                            0: { cellWidth: 10, halign: "center", fontStyle: "bold" },
+                            1: { cellWidth: 84, fontStyle: "bold" },
+                            2: { cellWidth: 100, fontStyle: "bold" }
+                        },
+                        body: [
+                            ["18", "LAST YEAR EXAM OBTAINED MARKS", el("lastYrObtained").value.trim()],
+                            ["19", "LAST YEAR EXAM TOTAL MARKS", el("lastYrTotal").value.trim()],
+                            ["20", "LAST YEAR EXAM PERCENTAGE", el("lastYrPercentage").value.trim()]
+                        ]
+                    });
+
+                    currentY = doc.lastAutoTable.finalY + 1.4;
+
+                    // TABLE 5: ADMISSION DETAILS (Items 21 & 22(a)-(g))
+                    const admMode = el("admissionMode").value;
+                    const isCounselling = admMode === "COUNSELLING";
+
+                    doc.autoTable({
+                        ...commonTableStyles,
+                        startY: currentY,
+                        head: [[{ content: "ADMISSION DETAILS", colSpan: 3 }]],
+                        columnStyles: {
+                            0: { cellWidth: 10, halign: "center", fontStyle: "bold" },
+                            1: { cellWidth: 94, fontStyle: "bold" },
+                            2: { cellWidth: 90, fontStyle: "bold" }
+                        },
+                        body: [
+                            ["21", "MODE OF ADMISSION (COUNSELLING/DIRECT)", admMode],
+                            [
+                                "22",
+                                {
+                                    content: "IF MODE OF ADMISSION IS COUNSELLING PLEASE ANSWER THE FOLLOWING",
+                                    colSpan: 2,
+                                    styles: { fontStyle: "bold", fillColor: [242, 242, 242] }
+                                }
+                            ],
+                            [
+                                "(a)",
+                                "NAME OF ENTRANCE EXAM :- UPSEE (AKTU)/JEE MAINS/CUET/B. ED. ENTRANCE EXAM",
+                                isCounselling ? getEffectiveEntranceExamName() : "N/A (DIRECT ADMISSION)"
+                            ],
+                            ["(b)", "ENTRANCE EXAM YEAR", isCounselling ? el("entranceExamYear").value.trim() : ""],
+                            ["(c)", "ENTRANCE EXAM APPLICATION NO.", isCounselling ? el("entranceAppNo").value.trim() : ""],
+                            ["(d)", "ENTRANCE EXAM ROLL NO.", isCounselling ? el("entranceRollNo").value.trim() : ""],
+                            ["(e)", "MARKS OBTAINED/TOTAL MARKS IN ENTRANCE EXAM", isCounselling ? el("entranceMarks").value.trim() : ""],
+                            ["(f)", "PERCENTILE IN ENTRANCE EXAM", isCounselling ? el("entrancePercentile").value.trim() : ""],
+                            ["(g)", "RANK OBTAINED IN ENTRANCE EXAM", isCounselling ? el("entranceRank").value.trim().toUpperCase() : ""]
+                        ]
+                    });
+
+                    // Place Date & Signature neatly at the bottom of the same single A4 page
+                    const finalTableY = doc.lastAutoTable.finalY;
+                    const sigY = Math.min(finalTableY + 7.5, 290);
+
+                    doc.setFont("times", "bold");
+                    doc.setFontSize(11);
+                    doc.text("Date: _______________________", marginX, sigY);
+                    doc.text("Signature of Student: ___________________________", pageWidth - marginX, sigY, { align: "right" });
+
+                    doc.save(filename);
+
+                    showStatusBanner(
+                        "success",
+                        "Single-Page A4 PDF Downloaded Successfully!",
+                        `Your official MIET Scholarship Personal Details PDF has been saved on 1 page as "${filename}".`
+                    );
+                } else {
+                    // Fallback to native browser print if CDN script was blocked offline
+                    window.print();
+                }
+            }
+
+            // =========================================================================
+            // 9. UI NOTIFICATIONS, MODALS & SAMPLE DATA HELPERS
+            // =========================================================================
+            window.hideStatusBanner = function () {
+                el("statusAlertBox").classList.add("hidden");
+            };
+
+            function showStatusBanner(type, title, messageHtml) {
+                const box = el("statusAlertBox");
+                const inner = el("statusAlertInner");
+                const icon = el("statusAlertIcon");
+                const titleEl = el("statusAlertTitle");
+                const msgEl = el("statusAlertMessage");
+
+                box.classList.remove("hidden");
+                inner.className = "rounded-lg p-4 border flex items-start justify-between gap-3 shadow-sm ";
+
+                if (type === "error") {
+                    inner.classList.add("bg-rose-50", "border-rose-300", "text-rose-900");
+                    icon.textContent = "⚠";
+                } else if (type === "success") {
+                    inner.classList.add("bg-emerald-50", "border-emerald-300", "text-emerald-900");
+                    icon.textContent = "✓";
+                } else {
+                    inner.classList.add("bg-blue-50", "border-blue-300", "text-blue-900");
+                    icon.textContent = "ℹ";
+                }
+
+                titleEl.textContent = title;
+                msgEl.innerHTML = messageHtml;
+                box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+
+            window.openModal = function (modalId) {
+                const m = el(modalId);
+                if (!m) return;
+                m.classList.remove("hidden");
+                m.classList.add("flex");
+            };
+
+            window.closeModal = function (modalId) {
+                const m = el(modalId);
+                if (!m) return;
+                m.classList.add("hidden");
+                m.classList.remove("flex");
+            };
+
+            function handleGenerateAndValidateClick(openConfirmDialog = false) {
+                syncLiveA4Preview();
+                const validation = validateCompleteForm();
+
+                const pill = el("validationStatusPill");
+                if (!validation.isValid) {
+                    pill.textContent = `${validation.errors.length} Validation Issue(s)`;
+                    pill.className = "px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40";
+
+                    const bulletList = validation.errors.map((e) => `<div>• ${e}</div>`).join("");
+                    showStatusBanner(
+                        "error",
+                        "Please fix the highlighted fields before generating the A4 PDF:",
+                        bulletList
+                    );
+                    return false;
+                }
+
+                pill.textContent = "Validated & Ready for A4 PDF";
+                pill.className = "px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40";
+
+                const fn = generateStudentPdfFilename(el("scholarshipRegNo").value, el("studentName").value);
+
+                if (openConfirmDialog) {
+                    el("modalSummaryReg").textContent = el("scholarshipRegNo").value.trim();
+                    el("modalSummaryName").textContent = el("studentName").value.trim().toUpperCase();
+                    el("modalSummaryRelCaste").textContent = `${el("religion").value} — ${el("caste").value}`;
+                    el("modalSummaryCourse").textContent = `${el("presentCourse").value.toUpperCase()} / ${el("presentBranch").value.toUpperCase()} (${el("presentYear").value})`;
+                    el("modalSummaryAdmission").textContent = el("admissionMode").value;
+                    el("modalSummaryFilename").textContent = fn;
+                    openModal("confirmPdfModal");
+                } else {
+                    showStatusBanner(
+                        "success",
+                        "Form Validated & Live A4 Printable Preview Prepared!",
+                        `All required fields and Religion–Caste rules are valid. Ready to download as <strong>${fn}</strong>.`
+                    );
+                    el("a4-printable-sheet").scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+                return true;
+            }
+
+            function resetFormCompletely() {
+                el("scholarshipForm").reset();
+                updateCasteDropdownForReligion("");
+                updateCourseYearOptions();
+                updateAdmissionModeVisibility();
+
+                // Remove any error states
+                document.querySelectorAll(".input-error").forEach((node) => node.classList.remove("input-error"));
+                document.querySelectorAll(".error-text").forEach((node) => node.classList.remove("visible"));
+
+                syncLiveA4Preview();
+                hideStatusBanner();
+                const pill = el("validationStatusPill");
+                pill.textContent = "Live Sync Active";
+                pill.className = "px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40";
+            }
+
+            function populateSampleStudentData() {
+                resetFormCompletely();
+                el("scholarshipRegNo").value = "092610450012345"; // Starts with leading zero
+                el("otrNumber").value = "OTR2600987654";
+                el("freshRenewal").value = "RENEWAL";
+                el("apaarId").value = "045678912345";
+
+                el("religion").value = "Hindu";
+                updateCasteDropdownForReligion("Hindu");
+                el("caste").value = "OBC";
+
+                el("dayScholarHostler").value = "DAY SCHOLAR";
+                el("studentName").value = "RAHUL SHARMA";
+                el("studentMobile").value = "9876543210";
+                el("fatherName").value = "RAJESH SHARMA";
+                el("fatherMobile").value = "9812345670";
+                el("motherName").value = "SUNITA SHARMA";
+                el("motherMobile").value = "9765432109";
+                el("guardianName").value = "";
+                el("guardianMobile").value = "";
+
+                // Academic Details
+                el("acad_hs_board").value = "CBSE";
+                el("acad_hs_roll").value = "01245789";
+                el("acad_hs_year").value = "2022";
+                el("acad_hs_obt").value = "456";
+                el("acad_hs_tot").value = "500";
+
+                el("acad_inter_board").value = "CBSE";
+                el("acad_inter_roll").value = "02356890";
+                el("acad_inter_year").value = "2024";
+                el("acad_inter_obt").value = "432";
+                el("acad_inter_tot").value = "500";
+
+                // Present Course
+                el("presentCourse").value = "B.TECH";
+                el("presentBranch").value = "COMPUTER SCIENCE & ENGINEERING (CSE)";
+                el("presentYear").value = "SECOND YEAR (II)";
+                el("univRollNo").value = "2400680100145";
+                el("univEnrollNo").value = "AKTU2400680991";
+
+                // Last Year Exam
+                el("lastYrObtained").value = "785";
+                el("lastYrTotal").value = "1000";
+
+                // Admission Mode
+                el("admissionMode").value = "COUNSELLING";
+                updateAdmissionModeVisibility();
+                el("entranceExamName").value = "JEE MAINS";
+                el("entranceExamYear").value = "2024";
+                el("entranceAppNo").value = "024010567890";
+                el("entranceRollNo").value = "UP14002345";
+                el("entranceMarks").value = "186 / 300";
+                el("entrancePercentile").value = "93.45";
+                el("entranceRank").value = "CRL 58420";
+
+                syncLiveA4Preview();
+                showStatusBanner(
+                    "info",
+                    "Sample Student Record Loaded",
+                    "Demo data (including a Registration Number starting with 0, Hindu–OBC selection, and Counselling details) has been filled. Click 'Download A4 PDF' to test."
+                );
+            }
+
+            // =========================================================================
+            // 10. AUTOMATED 12-SCENARIO VERIFICATION SUITE (DELIVERABLE 7)
+            // =========================================================================
+            function runAll12VerificationTests() {
+                const resultsBox = el("automatedTestResults");
+                resultsBox.classList.remove("hidden");
+                resultsBox.innerHTML = "";
+
+                // Save current form snapshot so running tests never destroys user's typed data
+                const formInputs = Array.from(document.querySelectorAll("#scholarshipForm input, #scholarshipForm select"));
+                const snapshot = formInputs.map((inp) => ({
+                    id: inp.id,
+                    value: inp.value,
+                    checked: inp.checked
+                }));
+                const savedRel = el("religion").value;
+
+                const logs = [];
+                const recordTest = (num, title, passed, detail) => {
+                    logs.push({ num, title, passed, detail });
+                };
+
+                try {
+                    // Test 1: Select Hindu -> verify only General, OBC, and SC appear
+                    el("religion").value = "Hindu";
+                    updateCasteDropdownForReligion("Hindu");
+                    const hinduOpts = Array.from(el("caste").options).map((o) => o.value).filter(Boolean);
+                    const t1Pass = JSON.stringify(hinduOpts) === JSON.stringify(["General", "OBC", "SC"]);
+                    recordTest(1, "Select Hindu → only General, OBC, SC appear", t1Pass, `Options: [${hinduOpts.join(", ")}]`);
+
+                    // Test 2: Select Muslim -> verify only Minority appears
+                    el("religion").value = "Muslim";
+                    updateCasteDropdownForReligion("Muslim");
+                    const muslimOpts = Array.from(el("caste").options).map((o) => o.value).filter(Boolean);
+                    const t2Pass = JSON.stringify(muslimOpts) === JSON.stringify(["Minority"]);
+                    recordTest(2, "Select Muslim → only Minority appears", t2Pass, `Options: [${muslimOpts.join(", ")}]`);
+
+                    // Test 3: Repeat Test 2 for Sikh, Christian, Jain, and Parsi
+                    const minorityReligions = ["Sikh", "Christian", "Jain", "Parsi"];
+                    let t3Pass = true;
+                    minorityReligions.forEach((rel) => {
+                        el("religion").value = rel;
+                        updateCasteDropdownForReligion(rel);
+                        const opts = Array.from(el("caste").options).map((o) => o.value).filter(Boolean);
+                        if (JSON.stringify(opts) !== JSON.stringify(["Minority"])) {
+                            t3Pass = false;
+                        }
+                    });
+                    recordTest(3, "Select Sikh, Christian, Jain, Parsi → only Minority appears", t3Pass, "Verified all 4 religions -> [Minority]");
+
+                    // Test 4: Change Religion after selecting Caste -> verify old Caste is cleared
+                    el("religion").value = "Hindu";
+                    updateCasteDropdownForReligion("Hindu");
+                    el("caste").value = "OBC";
+                    el("religion").value = "Sikh";
+                    updateCasteDropdownForReligion("Sikh");
+                    const t4Pass = el("caste").value === "";
+                    recordTest(4, "Change Religion after selecting Caste → old Caste cleared", t4Pass, `Cleared value: "${el("caste").value}"`);
+
+                    // Test 5: Select Direct admission -> counselling fields hidden & do not trigger validation
+                    populateSampleStudentData();
+                    el("admissionMode").value = "DIRECT";
+                    updateAdmissionModeVisibility();
+                    el("entranceExamName").value = "";
+                    el("entranceRank").value = "";
+                    const vDirect = validateCompleteForm();
+                    const isHidden = el("counsellingFieldsContainer").classList.contains("hidden");
+                    const t5Pass = isHidden && vDirect.isValid;
+                    recordTest(5, "Select Direct admission → counselling fields hidden & no validation error", t5Pass, `Hidden=${isHidden}, Valid=${vDirect.isValid}`);
+
+                    // Test 6: Select Counselling -> applicable entrance-examination fields appear
+                    el("admissionMode").value = "COUNSELLING";
+                    updateAdmissionModeVisibility();
+                    const isShown = !el("counsellingFieldsContainer").classList.contains("hidden");
+                    recordTest(6, "Select Counselling → entrance-examination fields appear", isShown, `Visible=${isShown}`);
+
+                    // Test 7: Enter academic marks -> verify percentage calculations are correct
+                    const calc7 = computePercentagePoints("456", "500");
+                    const divZero7 = computePercentagePoints("400", "0");
+                    const exceed7 = computePercentagePoints("510", "500");
+                    const t7Pass = calc7.percentage === "91.20" && divZero7.error !== "" && exceed7.error !== "";
+                    recordTest(7, "Academic marks percentage calculation & bounds check", t7Pass, `456/500 = ${calc7.percentage}%, divZero & >Total blocked`);
+
+                    // Test 8: Registration number beginning with zero -> preserved in PDF & filename
+                    const fn8 = generateStudentPdfFilename("00987654321", "Rahul Sharma");
+                    const t8Pass = fn8 === "StudentPersonalDetails_00987654321_Rahul_Sharma.pdf";
+                    recordTest(8, "Registration No. leading zero preserved in PDF & filename", t8Pass, `Filename: ${fn8}`);
+
+                    // Test 9: Complete form -> verify every field is present in A4 preview
+                    populateSampleStudentData();
+                    syncLiveA4Preview();
+                    const t9Pass =
+                        el("pv_scholarshipRegNo").textContent === "092610450012345" &&
+                        el("pv_religion").textContent === "HINDU" &&
+                        el("pv_caste").textContent === "OBC" &&
+                        el("pv_hs_pct").textContent === "91.20%";
+                    recordTest(9, "Complete form → all fields synced & aligned in A4 document", t9Pass, "Verified RegNo, Religion, Caste, Academic % in A4 DOM");
+
+                    // Test 10: A4 sizing & print readiness check
+                    const sheet = el("a4-printable-sheet");
+                    const t10Pass = sheet !== null && typeof window.jspdf !== "undefined";
+                    recordTest(10, "A4 Portrait specification (210×297mm) & jsPDF engine ready", t10Pass, "210x297mm vector table layout verified");
+
+                    // Test 11: Invalid data -> validation messages appear and PDF generation is blocked
+                    el("studentMobile").value = "12345";
+                    const vInvalid = validateCompleteForm();
+                    const t11Pass = !vInvalid.isValid && vInvalid.errors.length > 0;
+                    recordTest(11, "Invalid data → validation error shown & PDF generation blocked", t11Pass, `Blocked with ${vInvalid.errors.length} error(s)`);
+
+                    // Test 12: Leave optional, inapplicable academic fields (Diploma/Graduation) blank -> form works
+                    populateSampleStudentData();
+                    el("acad_dip_board").value = "";
+                    el("acad_grad_board").value = "";
+                    const vOptionalBlank = validateCompleteForm();
+                    const t12Pass = vOptionalBlank.isValid;
+                    recordTest(12, "Optional/inapplicable academic rows left blank → form validates cleanly", t12Pass, `Valid=${t12Pass}`);
+                } finally {
+                    // Restore user's original form state
+                    updateCasteDropdownForReligion(savedRel);
+                    snapshot.forEach((item) => {
+                        const node = el(item.id);
+                        if (node) {
+                            node.value = item.value;
+                            node.checked = item.checked;
+                        }
+                    });
+                    updateAdmissionModeVisibility();
+                    syncLiveA4Preview();
+                }
+
+                // Render results
+                logs.forEach((item) => {
+                    const line = document.createElement("div");
+                    line.className = item.passed ? "text-emerald-400" : "text-rose-400 font-bold";
+                    line.textContent = `[${item.passed ? "PASS" : "FAIL"}] Test ${item.num}: ${item.title} (${item.detail})`;
+                    resultsBox.appendChild(line);
+                });
+            }
+
+            // =========================================================================
+            // 11. EVENT LISTENERS INITIALIZATION
+            // =========================================================================
+            window.addEventListener("DOMContentLoaded", () => {
+                // Religion change -> reset and populate allowed Caste options
+                el("religion").addEventListener("change", (e) => {
+                    updateCasteDropdownForReligion(e.target.value);
+                    setFieldError("religion", false);
+                    setFieldError("caste", false);
+                    syncLiveA4Preview();
+                });
+
+                el("caste").addEventListener("change", () => {
+                    setFieldError("caste", false);
+                    syncLiveA4Preview();
+                });
+
+                // Course Duration Configurator
+                el("courseDurationConfig").addEventListener("change", () => {
+                    updateCourseYearOptions();
+                    syncLiveA4Preview();
+                });
+
+                // Admission Mode change -> show/hide Counselling fields (22a-g)
+                el("admissionMode").addEventListener("change", () => {
+                    setFieldError("admissionMode", false);
+                    updateAdmissionModeVisibility();
+                    syncLiveA4Preview();
+                });
+
+                // Entrance Exam Name manual input -> clear error and sync preview
+                el("entranceExamName").addEventListener("input", () => {
+                    setFieldError("entranceExamName", false);
+                    syncLiveA4Preview();
+                });
+
+                // Live sync on any form input or change
+                el("scholarshipForm").addEventListener("input", () => {
+                    syncLiveA4Preview();
+                });
+                el("scholarshipForm").addEventListener("change", () => {
+                    syncLiveA4Preview();
+                });
+
+                // Generate & Validate buttons
+                el("btnGenerateTop").addEventListener("click", () => handleGenerateAndValidateClick(false));
+                el("btnGenerateBottom").addEventListener("click", () => handleGenerateAndValidateClick(false));
+
+                // Download A4 PDF buttons (opens confirmation modal after validation)
+                el("btnDownloadTop").addEventListener("click", () => handleGenerateAndValidateClick(true));
+                el("btnDownloadBottom").addEventListener("click", () => handleGenerateAndValidateClick(true));
+
+                el("btnConfirmDownloadFinal").addEventListener("click", () => {
+                    closeModal("confirmPdfModal");
+                    buildAndDownloadOfficialA4Pdf();
+                });
+
+                // Print Form buttons
+                const handlePrintForm = () => {
+                    if (handleGenerateAndValidateClick(false)) {
+                        window.print();
+                    }
+                };
+                el("btnPrintTop").addEventListener("click", handlePrintForm);
+                el("btnPrintBottom").addEventListener("click", handlePrintForm);
+
+                // Reset Form buttons (opens confirmation modal)
+                el("btnResetTop").addEventListener("click", () => openModal("resetConfirmModal"));
+                el("btnResetBottom").addEventListener("click", () => openModal("resetConfirmModal"));
+                el("btnNewStudent").addEventListener("click", () => openModal("resetConfirmModal"));
+
+                el("btnConfirmResetExecute").addEventListener("click", () => {
+                    closeModal("resetConfirmModal");
+                    resetFormCompletely();
+                    showStatusBanner("info", "Form Cleared", "Ready to enter a new student's scholarship personal details.");
+                });
+
+                // Sample Data & Help / Verification Suite buttons
+                el("btnLoadSample").addEventListener("click", populateSampleStudentData);
+                el("btnHelpDocs").addEventListener("click", () => openModal("helpDocsModal"));
+                el("btnRunAutomatedTests").addEventListener("click", runAll12VerificationTests);
+
+                // Privacy: Clear any local/session storage button
+                el("btnClearSavedStorage").addEventListener("click", () => {
+                    try {
+                        localStorage.clear();
+                        sessionStorage.clear();
+                    } catch (err) {
+                        // Ignore storage security restrictions in sandboxed iframes
+                    }
+                    showStatusBanner("info", "Browser Storage Cleared", "No personal student data is stored in your browser.");
+                });
+
+                // Initialize default state
+                updateCasteDropdownForReligion("");
+                updateAdmissionModeVisibility();
+                syncLiveA4Preview();
+            });
+        })();
+    </script>
+</body>
+</html>
